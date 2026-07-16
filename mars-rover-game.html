@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mars Rover</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06080d;
+      --bg-soft: #0d121b;
+      --panel: rgba(10, 16, 26, 0.88);
+      --panel-strong: rgba(14, 20, 31, 0.96);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.14);
+      --text: #f7f8fa;
+      --muted: #8c95a5;
+      --accent: #ff5b2e;
+      --accent-strong: #ff7b3d;
+      --accent-soft: rgba(255, 91, 46, 0.16);
+      --success: #63e6be;
+      --warning: #ff6b6b;
+      --surface-open: #38211c;
+      --surface-open-line: rgba(255, 166, 135, 0.12);
+      --surface-visited: #8f472e;
+      --surface-wall: #171c27;
+      --surface-wall-line: rgba(255, 255, 255, 0.05);
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.34);
+      --cell-size: 44px;
+      --grid-gap: 8px;
+      --danger-glow: rgba(255, 91, 46, 0.44);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: "Space Grotesk", "IBM Plex Sans KR", "Segoe UI", "Apple SD Gothic Neo", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 111, 60, 0.12) 0, rgba(255, 111, 60, 0) 18%),
+        radial-gradient(circle at 80% 15%, rgba(93, 119, 255, 0.12) 0, rgba(93, 119, 255, 0) 16%),
+        linear-gradient(180deg, #05070b 0%, #0a1018 45%, #090d14 100%);
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.55;
+      background-image:
+        radial-gradient(circle at 14% 22%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 32% 68%, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 88% 62%, rgba(255, 255, 255, 0.6) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 58% 42%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px);
+      background-size: 280px 280px, 340px 340px, 380px 380px, 420px 420px, 500px 500px;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 64px;
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(13, 18, 27, 0.95), rgba(7, 11, 18, 0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      font-size: clamp(1.35rem, 2vw, 2rem);
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
+      text-align: right;
+      max-width: 420px;
+    }
+
+    .layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 356px minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(12, 17, 27, 0.96), rgba(7, 11, 17, 0.94));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .controls {
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+      gap: 12px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font: inherit;
+    }
+
+    input:focus {
+      outline: 2px solid rgba(255, 91, 46, 0.18);
+      border-color: rgba(255, 91, 46, 0.35);
+    }
+
+    .primary-button,
+    .secondary-button,
+    .direction-button {
+      border: 0;
+      border-radius: 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 140ms ease, filter 140ms ease, box-shadow 140ms ease;
+    }
+
+    .primary-button,
+    .secondary-button {
+      padding: 12px 14px;
+    }
+
+    .primary-button {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 12px 24px rgba(255, 91, 46, 0.22);
+    }
+
+    .secondary-button {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    button:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric-card,
+    .target-card {
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.03);
+      min-height: 92px;
+    }
+
+    .target-card {
+      min-height: 110px;
+      background: linear-gradient(135deg, rgba(255, 91, 46, 0.14), rgba(255, 255, 255, 0.04));
+      border-color: rgba(255, 91, 46, 0.2);
+    }
+
+    .metric-title {
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      font-size: clamp(1.1rem, 1.6vw, 1.6rem);
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .metric-copy {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .target-value {
+      font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      font-size: clamp(1.3rem, 2vw, 1.9rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--accent-strong);
+    }
+
+    .mission-success {
+      color: var(--success);
+    }
+
+    .mission-failed {
+      color: var(--warning);
+    }
+
+    .mission-in-progress {
+      color: var(--text);
+    }
+
+    .fuel-warning .metric-value,
+    .fuel-warning .fuel-gauge-value,
+    .fuel-warning .fuel-readout-value {
+      color: #ff7d7d;
+      text-shadow: 0 0 14px rgba(255, 107, 107, 0.42);
+      animation: warning-pulse 900ms steps(2, end) infinite;
+    }
+
+    .fuel-warning .fuel-gauge-fill {
+      background: linear-gradient(180deg, #ffb199, #ff4d4d);
+      box-shadow: 0 0 16px rgba(255, 77, 77, 0.32);
+      animation: warning-pulse 900ms steps(2, end) infinite;
+    }
+
+    .command-zone {
+      display: grid;
+      gap: 10px;
+      min-height: 0;
+      align-content: start;
+    }
+
+    .direction-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .direction-grid .spacer {
+      visibility: hidden;
+    }
+
+    .direction-button {
+      min-height: 48px;
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .status {
+      padding: 12px 14px;
+      border-radius: 16px;
+      color: #d5dae3;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: auto;
+    }
+
+    .surface {
+      position: relative;
+      padding: 14px;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .surface-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .surface-title {
+      margin: 0;
+      font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .surface-copy {
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+      margin-top: 4px;
+    }
+
+    .surface-badge {
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      white-space: nowrap;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .surface-body {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 110px;
+      gap: 12px;
+    }
+
+    .map-stage {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background:
+        radial-gradient(circle at top, rgba(255, 91, 46, 0.09), rgba(255, 91, 46, 0) 35%),
+        linear-gradient(180deg, rgba(22, 12, 9, 0.98), rgba(10, 9, 13, 0.98));
+      overflow: hidden;
+    }
+
+    .map {
+      display: grid;
+      gap: var(--grid-gap);
+      align-content: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+    }
+
+    .row {
+      display: flex;
+      gap: var(--grid-gap);
+      justify-content: center;
+    }
+
+    .cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      border-radius: clamp(10px, calc(var(--cell-size) * 0.24), 18px);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      transition:
+        transform 180ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease;
+      font-size: clamp(0.72rem, calc(var(--cell-size) * 0.22), 1rem);
+      font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      font-weight: 700;
+    }
+
+    .cell-open {
+      color: rgba(255, 214, 196, 0.65);
+      background: linear-gradient(180deg, #2c1712, #1f1311);
+      border: 1px solid var(--surface-open-line);
+    }
+
+    .cell-visited {
+      color: rgba(255, 239, 228, 0.84);
+      background: linear-gradient(180deg, #9e5535, #713826);
+      border: 1px solid rgba(255, 180, 146, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .cell-unvisited::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: 999px;
+      background: rgba(255, 91, 46, 0.12);
+      filter: blur(6px);
+    }
+
+    .cell-wall {
+      color: transparent;
+      background: linear-gradient(180deg, #1e2531, #121821);
+      border: 1px solid var(--surface-wall-line);
+      box-shadow: inset 0 -10px 18px rgba(0, 0, 0, 0.34);
+    }
+
+    .cell-rover {
+      box-shadow:
+        0 0 0 2px rgba(255, 91, 46, 0.16),
+        0 0 24px rgba(255, 91, 46, 0.18);
+      transform: translateY(-1px);
+      z-index: 2;
+    }
+
+    .cell-shake {
+      animation: collision-shake 360ms ease;
+    }
+
+    .rover-icon {
+      width: calc(var(--cell-size) * 0.82);
+      height: calc(var(--cell-size) * 0.82);
+      display: block;
+      transform: rotate(var(--rover-rotation, 0deg));
+      transition: transform 180ms ease, filter 180ms ease;
+      filter: drop-shadow(0 0 8px rgba(255, 91, 46, 0.34));
+    }
+
+    .fuel-rail {
+      min-height: 0;
+      padding: 12px;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      gap: 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .fuel-readout-title {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .fuel-readout-value {
+      font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .fuel-gauge {
+      align-self: stretch;
+      justify-self: center;
+      width: 26px;
+      min-height: 0;
+      border-radius: 999px;
+      padding: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: flex-end;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .fuel-gauge-fill {
+      width: 100%;
+      height: 0%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffbd81, #ff5b2e);
+      transition: height 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .fuel-scale {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(5, 7, 11, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 5;
+    }
+
+    .overlay.is-visible {
+      display: grid;
+    }
+
+    .overlay-card {
+      position: relative;
+      width: min(460px, calc(100% - 32px));
+      padding: 28px;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: linear-gradient(180deg, rgba(14, 20, 31, 0.98), rgba(8, 11, 18, 0.98));
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .overlay-card::before,
+    .overlay-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* Fallback visual treatment instead of embedded SpaceX Flickr data URI to keep the dev page lightweight. */
+    .overlay-card::before {
+      background:
+        radial-gradient(circle at 62% 18%, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, rgba(6, 8, 13, 0.05), rgba(6, 8, 13, 0.72)),
+        radial-gradient(circle at 50% 0%, rgba(255, 196, 156, 0.34), rgba(255, 196, 156, 0) 24%),
+        linear-gradient(180deg, rgba(150, 162, 178, 0.16), rgba(34, 41, 52, 0.14)),
+        radial-gradient(circle at 50% 122%, rgba(255, 91, 46, 0.42), rgba(255, 91, 46, 0) 28%);
+      opacity: 0.8;
+    }
+
+    .overlay-card::after {
+      background:
+        linear-gradient(180deg, rgba(7, 11, 18, 0.22), rgba(7, 11, 18, 0.82)),
+        linear-gradient(135deg, rgba(255, 91, 46, 0.14), transparent 42%);
+    }
+
+    .overlay-card.overlay-success::before {
+      background:
+        radial-gradient(circle at 50% 14%, rgba(255, 222, 198, 0.9) 0 3px, transparent 5px),
+        radial-gradient(circle at 66% 24%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, rgba(6, 8, 13, 0.08), rgba(6, 8, 13, 0.76)),
+        radial-gradient(circle at 50% 118%, rgba(255, 148, 85, 0.52), rgba(255, 148, 85, 0) 22%),
+        linear-gradient(180deg, rgba(175, 184, 197, 0.18), rgba(38, 42, 51, 0.12));
+    }
+
+    .overlay-card.overlay-failed::before {
+      background:
+        radial-gradient(circle at 64% 16%, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 18% 26%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, rgba(6, 8, 13, 0.18), rgba(6, 8, 13, 0.82)),
+        radial-gradient(circle at 50% 118%, rgba(255, 88, 88, 0.42), rgba(255, 88, 88, 0) 22%),
+        linear-gradient(180deg, rgba(116, 118, 126, 0.12), rgba(36, 33, 37, 0.12));
+    }
+
+    .overlay-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .overlay-title {
+      margin: 0 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      letter-spacing: -0.05em;
+    }
+
+    .overlay-copy {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .overlay-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .overlay-stat {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .overlay-stat-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .overlay-stat-value {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    @keyframes warning-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.52; }
+    }
+
+    @keyframes collision-shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    @media (max-width: 1279px) {
+      body {
+        overflow: auto;
+      }
+
+      main {
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .surface-body {
+        grid-template-columns: 1fr;
+      }
+
+      .fuel-rail {
+        grid-template-columns: auto auto 1fr auto;
+        grid-template-rows: none;
+        align-items: center;
+      }
+
+      .fuel-gauge {
+        height: 24px;
+        width: 100%;
+        max-width: 260px;
+        align-items: center;
+      }
+
+      .fuel-gauge-fill {
+        height: 100% !important;
+        width: 0%;
+      }
+    }
+
+    @media (max-width: 860px) {
+      main {
+        padding: 12px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .subtitle {
+        text-align: left;
+      }
+
+      .field-grid,
+      .metrics,
+      .overlay-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="topbar">
+      <div class="brand">
+        <div class="eyebrow">Mission Control</div>
+        <h1 class="title">MARS ROVER — Occupy Mars</h1>
+      </div>
+      <p class="subtitle">한 화면 안에서 화성 지형을 추적하고, 실시간 입력으로 로버를 조종하며, 임무 성공 또는 실패를 즉시 확인합니다.</p>
+    </header>
+
+    <section class="layout">
+      <section class="panel controls">
+        <div class="field-grid">
+          <div class="field">
+            <label class="label" for="height">Height</label>
+            <input id="height" type="number" min="3" max="20" value="5">
+          </div>
+          <div class="field">
+            <label class="label" for="width">Width</label>
+            <input id="width" type="number" min="3" max="20" value="5">
+          </div>
+        </div>
+
+        <button id="init-button" class="primary-button" type="button">LAUNCH GRID</button>
+
+        <div class="metrics">
+          <div id="fuel-card" class="metric-card">
+            <div class="metric-title">Fuel</div>
+            <div id="fuel-value" class="metric-value">0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Mission</div>
+            <div id="mission-value" class="metric-value mission-in-progress">탐사 진행 중</div>
+          </div>
+          <div class="target-card">
+            <div class="metric-title">Target</div>
+            <div id="target-value" class="target-value">0칸</div>
+            <p class="metric-copy">도달 가능한 최대 탐사 칸 수</p>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Progress</div>
+            <div id="progress-value" class="metric-value">0 / 0</div>
+          </div>
+        </div>
+
+        <div class="command-zone">
+          <div class="field">
+            <label class="label" for="command-input">Command Stream</label>
+            <input id="command-input" type="text" placeholder="예: ↑↓↑↓">
+          </div>
+
+          <div class="direction-grid">
+            <span class="spacer" aria-hidden="true"></span>
+            <button type="button" class="direction-button" data-command="↑">▲</button>
+            <span class="spacer" aria-hidden="true"></span>
+            <button type="button" class="direction-button" data-command="←">◀</button>
+            <button type="button" class="direction-button" data-command="↓">▼</button>
+            <button type="button" class="direction-button" data-command="→">▶</button>
+          </div>
+
+          <button id="send-button" class="secondary-button" type="button">EXECUTE</button>
+          <div class="hint">Keyboard arrows available. 입력창에 포커스가 없을 때는 화살표 키로 즉시 1칸 이동합니다.</div>
+        </div>
+
+        <div id="status" class="status">맵이 아직 생성되지 않았습니다.</div>
+      </section>
+
+      <section class="panel surface">
+        <div class="surface-head">
+          <div>
+            <h2 class="surface-title">Surface Grid</h2>
+            <p class="surface-copy">실시간 위치 추적, 방문 색상, 충돌 피드백, 미션 종료 오버레이를 지원합니다.</p>
+          </div>
+          <div class="surface-badge">Live Control Enabled</div>
+        </div>
+
+        <div class="legend">
+          <span><i class="dot" style="background: #38211c"></i>미탐사</span>
+          <span><i class="dot" style="background: #8f472e"></i>탐사 완료</span>
+          <span><i class="dot" style="background: #171c27"></i>장애물</span>
+          <span><i class="dot" style="background: #ff5b2e"></i>로버</span>
+        </div>
+
+        <div class="surface-body">
+          <div class="map-stage">
+            <div id="map" class="map" aria-live="polite"></div>
+          </div>
+
+          <aside id="fuel-rail" class="fuel-rail" aria-label="연료 소모량">
+            <div class="fuel-readout-title">Fuel</div>
+            <div id="fuel-side-value" class="fuel-readout-value">0</div>
+            <div class="fuel-gauge" aria-hidden="true">
+              <div id="fuel-gauge-fill" class="fuel-gauge-fill"></div>
+            </div>
+            <div class="fuel-scale">
+              <span>0</span>
+              <span>100</span>
+            </div>
+          </aside>
+        </div>
+
+        <div id="mission-overlay" class="overlay" aria-hidden="true">
+          <div class="overlay-card">
+            <h3 id="overlay-title" class="overlay-title">MISSION SUCCESS</h3>
+            <p id="overlay-copy" class="overlay-copy">탐사를 마쳤습니다.</p>
+            <div class="overlay-stats">
+              <div class="overlay-stat">
+                <div class="overlay-stat-label">Explored</div>
+                <div id="overlay-explored" class="overlay-stat-value">0 / 0</div>
+              </div>
+              <div class="overlay-stat">
+                <div class="overlay-stat-label">Fuel Used</div>
+                <div id="overlay-fuel" class="overlay-stat-value">0</div>
+              </div>
+            </div>
+            <button id="retry-button" class="primary-button" type="button">다시 도전</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const mapElement = document.getElementById("map");
+    const statusElement = document.getElementById("status");
+    const initButton = document.getElementById("init-button");
+    const sendButton = document.getElementById("send-button");
+    const retryButton = document.getElementById("retry-button");
+    const widthInput = document.getElementById("width");
+    const heightInput = document.getElementById("height");
+    const commandInput = document.getElementById("command-input");
+    const fuelValueElement = document.getElementById("fuel-value");
+    const fuelCardElement = document.getElementById("fuel-card");
+    const fuelRailElement = document.getElementById("fuel-rail");
+    const fuelSideValueElement = document.getElementById("fuel-side-value");
+    const fuelGaugeFillElement = document.getElementById("fuel-gauge-fill");
+    const missionValueElement = document.getElementById("mission-value");
+    const targetValueElement = document.getElementById("target-value");
+    const progressValueElement = document.getElementById("progress-value");
+    const overlayElement = document.getElementById("mission-overlay");
+    const overlayTitleElement = document.getElementById("overlay-title");
+    const overlayCopyElement = document.getElementById("overlay-copy");
+    const overlayExploredElement = document.getElementById("overlay-explored");
+    const overlayFuelElement = document.getElementById("overlay-fuel");
+    const directionButtons = document.querySelectorAll(".direction-button");
+
+    const ROVER_MARKUP = `
+      <svg class="rover-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="starshipHull" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#eef3fa" />
+            <stop offset="34%" stop-color="#b9c2d0" />
+            <stop offset="64%" stop-color="#7a8495" />
+            <stop offset="100%" stop-color="#dfe5ef" />
+          </linearGradient>
+          <linearGradient id="starshipWindow" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0f1522" />
+            <stop offset="100%" stop-color="#2e3b4f" />
+          </linearGradient>
+          <linearGradient id="starshipFlame" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stop-color="#d7f4ff" />
+            <stop offset="32%" stop-color="#7ad8ff" />
+            <stop offset="68%" stop-color="#ffad4d" />
+            <stop offset="100%" stop-color="#ff5b2e" />
+          </linearGradient>
+        </defs>
+        <g>
+          <path d="M32 3 C37 4 40 7 41 12 L41 40 C41 48 38 53 32 58 C26 53 23 48 23 40 L23 12 C24 7 27 4 32 3 Z" fill="url(#starshipHull)" />
+          <path d="M27 18 C29 15 35 15 37 18 L37 24 C35 26 29 26 27 24 Z" fill="url(#starshipWindow)" />
+          <path d="M23 34 L16 40 L22 42 L23 38 Z" fill="#98a4b6" />
+          <path d="M41 34 L48 40 L42 42 L41 38 Z" fill="#98a4b6" />
+          <path d="M27 43 L20 48 L24 51 L28 46 Z" fill="#aeb7c5" />
+          <path d="M37 43 L44 48 L40 51 L36 46 Z" fill="#aeb7c5" />
+          <path d="M27 56 C29 60 31 63 32 63 C33 63 35 60 37 56 C35 54 34 52 32 52 C30 52 29 54 27 56 Z" fill="url(#starshipFlame)" />
+          <path d="M29 11 C31 9 33 9 35 11" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="1.6" stroke-linecap="round" />
+        </g>
+      </svg>
+    `;
+
+    const KEY_TO_COMMAND = {
+      ArrowUp: "↑",
+      ArrowDown: "↓",
+      ArrowLeft: "←",
+      ArrowRight: "→"
+    };
+
+    const COMMAND_ROTATION = {
+      "↑": "0deg",
+      "↓": "180deg",
+      "←": "-90deg",
+      "→": "90deg"
+    };
+
+    let pollingTimerId = null;
+    let cellElements = [];
+    let currentRover = null;
+    let currentMission = "IN_PROGRESS";
+    let currentDirection = "↑";
+    let hasRenderedMap = false;
+    let commandInFlight = false;
+    let keyboardQueue = [];
+    let lastMapData = null;
+    let lastInitializedSize = { width: 5, height: 5 };
+    const localGameState = {
+      grid: null,
+      rover: null,
+      fuel: 0,
+      visited: null,
+      exploredCount: 0,
+      targetCount: 0
+    };
+
+    function getMissionLabel(mission) {
+      if (mission === "SUCCESS") {
+        return "탐사 성공";
+      }
+
+      if (mission === "FAILED") {
+        return "탐사 실패";
+      }
+
+      return "탐사 진행 중";
+    }
+
+    function isMissionEnded() {
+      return currentMission === "SUCCESS" || currentMission === "FAILED";
+    }
+
+    function buildGrid(height, width) {
+      const grid = [];
+
+      for (let rowIndex = 0; rowIndex < height; rowIndex += 1) {
+        const row = [];
+        for (let colIndex = 0; colIndex < width; colIndex += 1) {
+          const isBorder =
+            rowIndex === 0 ||
+            colIndex === 0 ||
+            rowIndex === height - 1 ||
+            colIndex === width - 1;
+          if (isBorder) {
+            row.push(1);
+          } else {
+            row.push(Math.random() < 0.3 ? 1 : 0);
+          }
+        }
+        grid.push(row);
+      }
+
+      grid[1][1] = 0;
+      return grid;
+    }
+
+    function buildVisited(grid, rover) {
+      const visited = grid.map((row) => row.map(() => false));
+      visited[rover.row][rover.col] = true;
+      return visited;
+    }
+
+    function countExplorableCells(grid, rover) {
+      const stack = [[rover.row, rover.col]];
+      const reachable = new Set([`${rover.row},${rover.col}`]);
+      const deltas = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+      while (stack.length > 0) {
+        const [currentRow, currentCol] = stack.pop();
+        deltas.forEach(([deltaRow, deltaCol]) => {
+          const nextRow = currentRow + deltaRow;
+          const nextCol = currentCol + deltaCol;
+          const isOutOfBounds =
+            nextRow < 0 ||
+            nextCol < 0 ||
+            nextRow >= grid.length ||
+            nextCol >= grid[0].length;
+
+          if (isOutOfBounds || grid[nextRow][nextCol] === 1) {
+            return;
+          }
+
+          const key = `${nextRow},${nextCol}`;
+          if (reachable.has(key)) {
+            return;
+          }
+
+          reachable.add(key);
+          stack.push([nextRow, nextCol]);
+        });
+      }
+
+      return reachable.size;
+    }
+
+    function evaluateMissionStatusLocal() {
+      if (localGameState.fuel >= 100) {
+        return "FAILED";
+      }
+
+      if (localGameState.targetCount > 0 && localGameState.exploredCount >= localGameState.targetCount) {
+        return "SUCCESS";
+      }
+
+      return "IN_PROGRESS";
+    }
+
+    function markVisitedLocal(position) {
+      if (!localGameState.visited[position.row][position.col]) {
+        localGameState.visited[position.row][position.col] = true;
+        localGameState.exploredCount += 1;
+      }
+    }
+
+    function markTraversedPathLocal(path) {
+      path.forEach((position) => markVisitedLocal(position));
+    }
+
+    function normalizeCommandsLocal(commands) {
+      const directionAliases = {
+        U: "U",
+        D: "D",
+        L: "L",
+        R: "R",
+        "↑": "U",
+        "↓": "D",
+        "←": "L",
+        "→": "R"
+      };
+
+      return commands.map((command) => {
+        const normalized = directionAliases[command.trim().toUpperCase()];
+        if (!normalized) {
+          throw new Error(`invalid command: ${command}`);
+        }
+        return normalized;
+      });
+    }
+
+    function moveRoverLocal(grid, rover, commands) {
+      const directionMap = {
+        U: [-1, 0],
+        D: [1, 0],
+        L: [0, -1],
+        R: [0, 1]
+      };
+
+      let currentRow = rover.row;
+      let currentCol = rover.col;
+      let fuelUsed = 0;
+      const traversedPath = [];
+
+      for (const command of commands) {
+        const [deltaRow, deltaCol] = directionMap[command];
+        const nextRow = currentRow + deltaRow;
+        const nextCol = currentCol + deltaCol;
+        const isOutOfBounds =
+          nextRow < 0 ||
+          nextCol < 0 ||
+          nextRow >= grid.length ||
+          nextCol >= grid[0].length;
+
+        if (isOutOfBounds || grid[nextRow][nextCol] === 1) {
+          fuelUsed += 10;
+          return {
+            rover: { row: currentRow, col: currentCol },
+            result: "Warning",
+            fuelDelta: fuelUsed,
+            traversedPath
+          };
+        }
+
+        currentRow = nextRow;
+        currentCol = nextCol;
+        fuelUsed += 1;
+        traversedPath.push({ row: currentRow, col: currentCol });
+      }
+
+      return {
+        rover: { row: currentRow, col: currentCol },
+        result: "Pass",
+        fuelDelta: fuelUsed,
+        traversedPath
+      };
+    }
+
+    function buildLocalResponse(status) {
+      if (!localGameState.grid || !localGameState.rover || !localGameState.visited) {
+        throw new Error("game is not initialized");
+      }
+
+      return {
+        grid: localGameState.grid,
+        rover: localGameState.rover,
+        fuel: localGameState.fuel,
+        visited: localGameState.visited,
+        exploredCount: localGameState.exploredCount,
+        targetCount: localGameState.targetCount,
+        mission: evaluateMissionStatusLocal(),
+        status
+      };
+    }
+
+    function initializeLocalGame(width, height) {
+      if (width < 3 || height < 3) {
+        throw new Error("width and height must be at least 3");
+      }
+
+      const grid = buildGrid(height, width);
+      const rover = { row: 1, col: 1 };
+      localGameState.grid = grid;
+      localGameState.rover = rover;
+      localGameState.fuel = 0;
+      localGameState.visited = buildVisited(grid, rover);
+      localGameState.exploredCount = 1;
+      localGameState.targetCount = countExplorableCells(grid, rover);
+
+      return buildLocalResponse("READY");
+    }
+
+    function moveLocalGame(commands) {
+      if (!localGameState.grid || !localGameState.rover) {
+        throw new Error("game is not initialized");
+      }
+
+      const normalizedCommands = normalizeCommandsLocal(commands);
+      const moveResult = moveRoverLocal(localGameState.grid, localGameState.rover, normalizedCommands);
+      localGameState.rover = moveResult.rover;
+      localGameState.fuel = Math.min(localGameState.fuel + moveResult.fuelDelta, 100);
+      markTraversedPathLocal(moveResult.traversedPath);
+
+      return {
+        ...buildLocalResponse("READY"),
+        result: moveResult.result,
+        commands: normalizedCommands
+      };
+    }
+
+    function updateFuel(value) {
+      const normalizedValue = Math.max(0, Math.min(100, Number(value) || 0));
+      fuelValueElement.textContent = String(normalizedValue);
+      fuelSideValueElement.textContent = String(normalizedValue);
+
+      if (window.innerWidth <= 1279) {
+        fuelGaugeFillElement.style.width = `${normalizedValue}%`;
+      } else {
+        fuelGaugeFillElement.style.height = `${normalizedValue}%`;
+      }
+
+      const isWarning = normalizedValue >= 70;
+      fuelCardElement.classList.toggle("fuel-warning", isWarning);
+      fuelRailElement.classList.toggle("fuel-warning", isWarning);
+    }
+
+    function updateTarget(targetCount) {
+      targetValueElement.textContent = `${targetCount}칸`;
+    }
+
+    function updateMission(mission, exploredCount, targetCount) {
+      currentMission = mission;
+      missionValueElement.textContent = getMissionLabel(mission);
+      missionValueElement.className = "metric-value";
+
+      if (mission === "SUCCESS") {
+        missionValueElement.classList.add("mission-success");
+      } else if (mission === "FAILED") {
+        missionValueElement.classList.add("mission-failed");
+      } else {
+        missionValueElement.classList.add("mission-in-progress");
+      }
+
+      progressValueElement.textContent = `${exploredCount} / ${targetCount}`;
+    }
+
+    function buildCellClass(cell, isVisited) {
+      return cell === 1 ? "cell-wall" : (isVisited ? "cell-visited" : "cell-open cell-unvisited");
+    }
+
+    function updateVisitedCells(visited) {
+      if (!cellElements.length || !visited) {
+        return;
+      }
+
+      cellElements.forEach((cellRow, rowIndex) => {
+        cellRow.forEach((cellElement, colIndex) => {
+          if (cellElement.dataset.baseValue !== "0") {
+            return;
+          }
+
+          if (visited[rowIndex]?.[colIndex]) {
+            cellElement.classList.add("cell-visited");
+            cellElement.classList.remove("cell-open", "cell-unvisited");
+          } else {
+            cellElement.classList.remove("cell-visited");
+            cellElement.classList.add("cell-open", "cell-unvisited");
+          }
+        });
+      });
+    }
+
+    function renderRoverMarkup(cellElement, direction) {
+      cellElement.innerHTML = ROVER_MARKUP;
+      const roverIcon = cellElement.querySelector(".rover-icon");
+      if (roverIcon) {
+        roverIcon.style.setProperty("--rover-rotation", COMMAND_ROTATION[direction] || "0deg");
+      }
+    }
+
+    function setRoverPosition(nextRover, direction = currentDirection) {
+      if (!cellElements.length) {
+        return;
+      }
+
+      if (currentRover) {
+        const previousCell = cellElements[currentRover.row]?.[currentRover.col];
+        if (previousCell) {
+          previousCell.classList.remove("cell-rover", "cell-shake");
+          previousCell.textContent = previousCell.dataset.baseValue;
+        }
+      }
+
+      const nextCell = cellElements[nextRover.row]?.[nextRover.col];
+      if (!nextCell) {
+        return;
+      }
+
+      currentDirection = direction;
+      nextCell.classList.add("cell-rover");
+      renderRoverMarkup(nextCell, direction);
+      currentRover = nextRover;
+    }
+
+    function triggerCollisionFeedback() {
+      if (!currentRover) {
+        return;
+      }
+
+      const roverCell = cellElements[currentRover.row]?.[currentRover.col];
+      if (!roverCell) {
+        return;
+      }
+
+      roverCell.classList.remove("cell-shake");
+      void roverCell.offsetWidth;
+      roverCell.classList.add("cell-shake");
+    }
+
+    function fitGridToViewport(grid) {
+      if (!grid || grid.length === 0) {
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        const rows = grid.length;
+        const cols = grid[0].length;
+        const containerWidth = mapElement.clientWidth || 600;
+        const containerHeight = mapElement.clientHeight || 600;
+        const gap = 8;
+        const maxByWidth = (containerWidth - gap * (cols - 1)) / cols;
+        const maxByHeight = (containerHeight - gap * (rows - 1)) / rows;
+        const cellSize = Math.max(22, Math.min(maxByWidth, maxByHeight, 62));
+        mapElement.style.setProperty("--cell-size", `${cellSize}px`);
+      });
+    }
+
+    function renderGrid(grid, rover, visited) {
+      mapElement.innerHTML = "";
+      cellElements = [];
+
+      grid.forEach((row, rowIndex) => {
+        const rowElement = document.createElement("div");
+        rowElement.className = "row";
+        const cellRow = [];
+
+        row.forEach((cell, colIndex) => {
+          const cellElement = document.createElement("div");
+          const isVisited = visited[rowIndex][colIndex];
+          cellElement.className = `cell ${buildCellClass(cell, isVisited)}`;
+          cellElement.dataset.baseValue = String(cell);
+          cellElement.textContent = String(cell);
+          rowElement.appendChild(cellElement);
+          cellRow.push(cellElement);
+        });
+
+        cellElements.push(cellRow);
+        mapElement.appendChild(rowElement);
+      });
+
+      hasRenderedMap = true;
+      fitGridToViewport(grid);
+      setRoverPosition(rover);
+    }
+
+    function updateOverlay(data) {
+      const isVisible = data.mission === "SUCCESS" || data.mission === "FAILED";
+      overlayElement.classList.toggle("is-visible", isVisible);
+      overlayElement.setAttribute("aria-hidden", String(!isVisible));
+      overlayElement.querySelector(".overlay-card").classList.toggle("overlay-success", data.mission === "SUCCESS");
+      overlayElement.querySelector(".overlay-card").classList.toggle("overlay-failed", data.mission === "FAILED");
+
+      if (!isVisible) {
+        return;
+      }
+
+      overlayTitleElement.textContent = data.mission === "SUCCESS" ? "MISSION SUCCESS" : "MISSION FAILED";
+      overlayCopyElement.textContent = data.mission === "SUCCESS"
+        ? "NOMINAL — 도달 가능한 모든 구역 탐사를 완료했습니다."
+        : "ABORT — 연료 한계에 도달해 임무가 종료되었습니다.";
+      overlayExploredElement.textContent = `${data.exploredCount} / ${data.targetCount}`;
+      overlayFuelElement.textContent = String(data.fuel);
+    }
+
+    function applyGameState(data, options = {}) {
+      const { rebuildGrid = false, direction = currentDirection, result = null, source = "poll" } = options;
+
+      lastMapData = data;
+      updateFuel(data.fuel);
+      updateTarget(data.targetCount);
+      updateMission(data.mission, data.exploredCount, data.targetCount);
+
+      if (rebuildGrid || !cellElements.length) {
+        renderGrid(data.grid, data.rover, data.visited);
+      } else {
+        updateVisitedCells(data.visited);
+        setRoverPosition(data.rover, direction);
+      }
+
+      updateOverlay(data);
+
+      if (result === "Warning") {
+        triggerCollisionFeedback();
+      }
+
+      if (source === "poll" && isMissionEnded()) {
+        statusElement.textContent = getMissionLabel(data.mission);
+      }
+    }
+
+    async function syncCurrentState() {
+      if (!hasRenderedMap) {
+        return;
+      }
+
+      try {
+        const data = buildLocalResponse("READY");
+        applyGameState(data, { rebuildGrid: false, source: "poll" });
+      } catch (error) {
+        statusElement.textContent = error.message || "상태 조회에 실패했습니다.";
+      }
+    }
+
+    function startStatePolling() {
+      if (pollingTimerId !== null) {
+        window.clearInterval(pollingTimerId);
+      }
+    }
+
+    async function requestInitialize(width, height) {
+      return initializeLocalGame(width, height);
+    }
+
+    async function initializeMap(customSize = null) {
+      const width = customSize?.width ?? Number(widthInput.value);
+      const height = customSize?.height ?? Number(heightInput.value);
+
+      if (!Number.isInteger(width) || !Number.isInteger(height) || width < 3 || height < 3) {
+        statusElement.textContent = "높이와 너비는 3 이상의 정수여야 합니다.";
+        return;
+      }
+
+      statusElement.textContent = "Launch sequence started...";
+      overlayElement.classList.remove("is-visible");
+      overlayElement.setAttribute("aria-hidden", "true");
+      currentMission = "IN_PROGRESS";
+      keyboardQueue = [];
+
+      try {
+        const data = await requestInitialize(width, height);
+        lastInitializedSize = { width, height };
+        widthInput.value = String(width);
+        heightInput.value = String(height);
+        commandInput.value = "";
+        applyGameState(data, { rebuildGrid: true, source: "init" });
+        startStatePolling();
+        statusElement.textContent = `Launch complete: ${height} x ${width} grid, 탐사 목표 ${data.targetCount}칸`;
+      } catch (error) {
+        statusElement.textContent = error.message || "초기화에 실패했습니다.";
+      }
+    }
+
+    async function executeCommands(commands, options = {}) {
+      if (commands.length === 0) {
+        return;
+      }
+
+      const { source = "manual" } = options;
+      commandInFlight = true;
+
+      try {
+        const data = moveLocalGame(commands);
+        const direction = commands[commands.length - 1];
+        applyGameState(data, {
+          rebuildGrid: false,
+          direction,
+          result: data.result,
+          source
+        });
+
+        if (source === "manual") {
+          statusElement.textContent = `명령 ${commands.join("")} 결과: ${data.result}, 탐사 ${data.exploredCount}/${data.targetCount}, 연료 ${data.fuel}, 상태 ${getMissionLabel(data.mission)}`;
+        } else {
+          statusElement.textContent = `실시간 조종: ${commands.join("")}, 결과 ${data.result}, 연료 ${data.fuel}`;
+        }
+      } catch (error) {
+        statusElement.textContent = error.message || "이동 요청에 실패했습니다.";
+      } finally {
+        commandInFlight = false;
+        processKeyboardQueue();
+      }
+    }
+
+    function processKeyboardQueue() {
+      if (commandInFlight || keyboardQueue.length === 0 || !hasRenderedMap || isMissionEnded()) {
+        return;
+      }
+
+      const nextCommand = keyboardQueue.shift();
+      if (!nextCommand) {
+        return;
+      }
+
+      executeCommands([nextCommand], { source: "keyboard" });
+    }
+
+    async function sendCommands() {
+      const commands = Array.from(commandInput.value.trim()).filter(Boolean);
+
+      if (commands.length === 0) {
+        statusElement.textContent = "이동 명령을 하나 이상 입력하세요.";
+        return;
+      }
+
+      if (!hasRenderedMap || isMissionEnded()) {
+        statusElement.textContent = "현재 상태에서는 명령을 실행할 수 없습니다.";
+        return;
+      }
+
+      if (commandInFlight) {
+        statusElement.textContent = "이전 명령 처리 중입니다.";
+        return;
+      }
+
+      commandInput.value = "";
+      statusElement.textContent = "Executing command stream...";
+      await executeCommands(commands, { source: "manual" });
+    }
+
+    function appendCommand(command) {
+      commandInput.value += command;
+    }
+
+    function handleKeyboardControl(event) {
+      const command = KEY_TO_COMMAND[event.key];
+      if (!command) {
+        return;
+      }
+
+      // 입력창(명령, 높이/너비 등)에 포커스가 있으면 실시간 조종을 하지 않는다.
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag === "INPUT" || activeTag === "TEXTAREA") {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (!hasRenderedMap || isMissionEnded()) {
+        return;
+      }
+
+      keyboardQueue.push(command);
+      processKeyboardQueue();
+    }
+
+    function handleResize() {
+      if (lastMapData) {
+        fitGridToViewport(lastMapData.grid);
+      }
+
+      if (lastMapData) {
+        updateFuel(lastMapData.fuel);
+      }
+    }
+
+    initButton.addEventListener("click", () => initializeMap());
+    sendButton.addEventListener("click", sendCommands);
+    retryButton.addEventListener("click", () => initializeMap(lastInitializedSize));
+    directionButtons.forEach((button) => {
+      button.addEventListener("click", () => appendCommand(button.dataset.command));
+    });
+    window.addEventListener("keydown", handleKeyboardControl);
+    window.addEventListener("resize", handleResize);
+  </script>
+</body>
+</html>
