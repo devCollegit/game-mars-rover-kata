@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="space">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,29 +8,80 @@
     @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap");
 
     :root {
-      color-scheme: dark;
-      --bg: #06080d;
-      --bg-soft: #0d121b;
-      --panel: rgba(10, 16, 26, 0.88);
-      --panel-strong: rgba(14, 20, 31, 0.96);
-      --line: rgba(255, 255, 255, 0.08);
-      --line-strong: rgba(255, 255, 255, 0.14);
+      --body-background:
+        radial-gradient(circle at 20% 20%, rgba(255, 111, 60, 0.12) 0, rgba(255, 111, 60, 0) 18%),
+        radial-gradient(circle at 80% 15%, rgba(93, 119, 255, 0.12) 0, rgba(93, 119, 255, 0) 16%),
+        linear-gradient(180deg, #05070b 0%, #0a1018 45%, #090d14 100%);
+      --sky-pattern:
+        radial-gradient(circle at 14% 22%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 32% 68%, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 88% 62%, rgba(255, 255, 255, 0.6) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 58% 42%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px);
+      --sky-opacity: 0.55;
+      --topbar-start: rgba(13, 18, 27, 0.95);
+      --topbar-end: rgba(7, 11, 18, 0.92);
+      --panel-start: rgba(12, 17, 27, 0.96);
+      --panel-end: rgba(7, 11, 17, 0.94);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-strong-bg: linear-gradient(135deg, rgba(255, 91, 46, 0.14), rgba(255, 255, 255, 0.04));
+      --input-bg: rgba(255, 255, 255, 0.04);
+      --input-border: rgba(255, 255, 255, 0.08);
+      --button-secondary-bg: rgba(255, 255, 255, 0.08);
+      --button-secondary-border: rgba(255, 255, 255, 0.08);
+      --status-bg: rgba(255, 255, 255, 0.04);
+      --status-border: rgba(255, 255, 255, 0.06);
+      --map-stage-background:
+        radial-gradient(circle at top, rgba(255, 91, 46, 0.09), rgba(255, 91, 46, 0) 35%),
+        linear-gradient(180deg, rgba(22, 12, 9, 0.98), rgba(10, 9, 13, 0.98));
+      --overlay-backdrop: rgba(5, 7, 11, 0.82);
+      --overlay-card-bg: linear-gradient(180deg, rgba(14, 20, 31, 0.98), rgba(8, 11, 18, 0.98));
+      --overlay-base:
+        radial-gradient(circle at 62% 18%, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, rgba(6, 8, 13, 0.05), rgba(6, 8, 13, 0.72)),
+        radial-gradient(circle at 50% 0%, rgba(255, 196, 156, 0.34), rgba(255, 196, 156, 0) 24%),
+        linear-gradient(180deg, rgba(150, 162, 178, 0.16), rgba(34, 41, 52, 0.14)),
+        radial-gradient(circle at 50% 122%, rgba(255, 91, 46, 0.42), rgba(255, 91, 46, 0) 28%);
+      --overlay-success:
+        radial-gradient(circle at 50% 14%, rgba(255, 222, 198, 0.9) 0 3px, transparent 5px),
+        radial-gradient(circle at 66% 24%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, rgba(6, 8, 13, 0.08), rgba(6, 8, 13, 0.76)),
+        radial-gradient(circle at 50% 118%, rgba(255, 148, 85, 0.52), rgba(255, 148, 85, 0) 22%),
+        linear-gradient(180deg, rgba(175, 184, 197, 0.18), rgba(38, 42, 51, 0.12));
+      --overlay-failed:
+        radial-gradient(circle at 64% 16%, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 18% 26%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, rgba(6, 8, 13, 0.18), rgba(6, 8, 13, 0.82)),
+        radial-gradient(circle at 50% 118%, rgba(255, 88, 88, 0.42), rgba(255, 88, 88, 0) 22%),
+        linear-gradient(180deg, rgba(116, 118, 126, 0.12), rgba(36, 33, 37, 0.12));
       --text: #f7f8fa;
       --muted: #8c95a5;
       --accent: #ff5b2e;
       --accent-strong: #ff7b3d;
       --accent-soft: rgba(255, 91, 46, 0.16);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.14);
       --success: #63e6be;
       --warning: #ff6b6b;
-      --surface-open: #38211c;
+      --warning-color: #ff7d7d;
+      --warning-glow: rgba(255, 107, 107, 0.42);
+      --warning-fill-start: #ffb199;
+      --warning-fill-end: #ff4d4d;
+      --surface-open-text: rgba(255, 214, 196, 0.65);
+      --surface-open-bg: linear-gradient(180deg, #2c1712, #1f1311);
       --surface-open-line: rgba(255, 166, 135, 0.12);
-      --surface-visited: #8f472e;
-      --surface-wall: #171c27;
+      --surface-visited-text: rgba(255, 239, 228, 0.84);
+      --surface-visited-bg: linear-gradient(180deg, #9e5535, #713826);
+      --surface-visited-line: rgba(255, 180, 146, 0.16);
+      --surface-unvisited-glow: rgba(255, 91, 46, 0.12);
+      --surface-wall-bg: linear-gradient(180deg, #1e2531, #121821);
       --surface-wall-line: rgba(255, 255, 255, 0.05);
+      --rover-glow: rgba(255, 91, 46, 0.18);
       --shadow: 0 20px 50px rgba(0, 0, 0, 0.34);
       --cell-size: 44px;
       --grid-gap: 8px;
-      --danger-glow: rgba(255, 91, 46, 0.44);
     }
 
     * {
@@ -47,11 +98,9 @@
       overflow: hidden;
       font-family: "IBM Plex Sans KR", sans-serif;
       color: var(--text);
-      background:
-        radial-gradient(circle at 20% 20%, rgba(255, 111, 60, 0.12) 0, rgba(255, 111, 60, 0) 18%),
-        radial-gradient(circle at 80% 15%, rgba(93, 119, 255, 0.12) 0, rgba(93, 119, 255, 0) 16%),
-        linear-gradient(180deg, #05070b 0%, #0a1018 45%, #090d14 100%);
+      background: var(--body-background);
       position: relative;
+      transition: background 220ms ease, color 220ms ease;
     }
 
     body::before {
@@ -59,14 +108,10 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.55;
-      background-image:
-        radial-gradient(circle at 14% 22%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 32% 68%, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 88% 62%, rgba(255, 255, 255, 0.6) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 58% 42%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px);
+      opacity: var(--sky-opacity);
+      background-image: var(--sky-pattern);
       background-size: 280px 280px, 340px 340px, 380px 380px, 420px 420px, 500px 500px;
+      transition: opacity 220ms ease, background-image 220ms ease;
     }
 
     main {
@@ -90,7 +135,7 @@
       padding: 14px 18px;
       border: 1px solid var(--line);
       border-radius: 22px;
-      background: linear-gradient(180deg, rgba(13, 18, 27, 0.95), rgba(7, 11, 18, 0.92));
+      background: linear-gradient(180deg, var(--topbar-start), var(--topbar-end));
       box-shadow: var(--shadow);
     }
 
@@ -114,7 +159,45 @@
       font-family: "Space Grotesk", sans-serif;
       font-size: clamp(1.35rem, 2vw, 2rem);
       letter-spacing: -0.04em;
-      white-space: nowrap;
+    }
+
+    .topbar-side {
+      display: grid;
+      gap: 10px;
+      justify-items: end;
+      min-width: min(100%, 380px);
+    }
+
+    .theme-picker {
+      display: grid;
+      gap: 6px;
+      width: min(100%, 260px);
+    }
+
+    .theme-picker-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .theme-select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text);
+      font: inherit;
+      outline: none;
+    }
+
+    /* 드롭다운 목록은 브라우저 기본 배경(흰색)을 쓰므로,
+       테마 배경·글자색을 명시하지 않으면 다크 테마에서 흰 글씨가 안 보인다. */
+    .theme-select option {
+      background: var(--topbar-end);
+      color: var(--text);
     }
 
     .subtitle {
@@ -136,7 +219,7 @@
       min-height: 0;
       border: 1px solid var(--line);
       border-radius: 24px;
-      background: linear-gradient(180deg, rgba(12, 17, 27, 0.96), rgba(7, 11, 17, 0.94));
+      background: linear-gradient(180deg, var(--panel-start), var(--panel-end));
       box-shadow: var(--shadow);
       overflow: hidden;
     }
@@ -170,16 +253,21 @@
     input {
       width: 100%;
       padding: 11px 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--input-border);
       border-radius: 14px;
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--input-bg);
       color: var(--text);
       font: inherit;
     }
 
-    input:focus {
-      outline: 2px solid rgba(255, 91, 46, 0.18);
-      border-color: rgba(255, 91, 46, 0.35);
+    input::placeholder {
+      color: var(--muted);
+    }
+
+    input:focus,
+    .theme-select:focus {
+      outline: 2px solid var(--accent-soft);
+      border-color: color-mix(in srgb, var(--accent) 42%, transparent);
     }
 
     .primary-button,
@@ -201,13 +289,13 @@
     .primary-button {
       color: white;
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      box-shadow: 0 12px 24px rgba(255, 91, 46, 0.22);
+      box-shadow: 0 12px 24px color-mix(in srgb, var(--accent) 30%, transparent);
     }
 
     .secondary-button {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--button-secondary-bg);
+      border: 1px solid var(--button-secondary-border);
     }
 
     button:hover {
@@ -230,14 +318,14 @@
       padding: 12px;
       border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--card-bg);
       min-height: 92px;
     }
 
     .target-card {
       min-height: 110px;
-      background: linear-gradient(135deg, rgba(255, 91, 46, 0.14), rgba(255, 255, 255, 0.04));
-      border-color: rgba(255, 91, 46, 0.2);
+      background: var(--card-strong-bg);
+      border-color: color-mix(in srgb, var(--accent) 24%, transparent);
     }
 
     .metric-title {
@@ -284,16 +372,15 @@
     }
 
     .fuel-warning .metric-value,
-    .fuel-warning .fuel-gauge-value,
     .fuel-warning .fuel-readout-value {
-      color: #ff7d7d;
-      text-shadow: 0 0 14px rgba(255, 107, 107, 0.42);
+      color: var(--warning-color);
+      text-shadow: 0 0 14px var(--warning-glow);
       animation: warning-pulse 900ms steps(2, end) infinite;
     }
 
     .fuel-warning .fuel-gauge-fill {
-      background: linear-gradient(180deg, #ffb199, #ff4d4d);
-      box-shadow: 0 0 16px rgba(255, 77, 77, 0.32);
+      background: linear-gradient(180deg, var(--warning-fill-start), var(--warning-fill-end));
+      box-shadow: 0 0 16px color-mix(in srgb, var(--warning-fill-end) 35%, transparent);
       animation: warning-pulse 900ms steps(2, end) infinite;
     }
 
@@ -316,9 +403,9 @@
 
     .direction-button {
       min-height: 48px;
-      color: white;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      background: var(--button-secondary-bg);
+      border: 1px solid var(--button-secondary-border);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
@@ -328,18 +415,18 @@
       line-height: 1.4;
       padding: 10px 12px;
       border-radius: 14px;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .status {
       padding: 12px 14px;
       border-radius: 16px;
-      color: #d5dae3;
+      color: color-mix(in srgb, var(--text) 88%, white);
       font-size: 0.84rem;
       line-height: 1.5;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--status-bg);
+      border: 1px solid var(--status-border);
       overflow: auto;
     }
 
@@ -407,6 +494,22 @@
       display: inline-block;
     }
 
+    .dot-open {
+      background: color-mix(in srgb, var(--surface-unvisited-glow) 75%, transparent);
+    }
+
+    .dot-visited {
+      background: color-mix(in srgb, var(--accent-strong) 72%, white);
+    }
+
+    .dot-wall {
+      background: color-mix(in srgb, var(--surface-wall-line) 20%, var(--text));
+    }
+
+    .dot-rover {
+      background: var(--accent);
+    }
+
     .surface-body {
       min-height: 0;
       display: grid;
@@ -420,10 +523,9 @@
       place-items: center;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.06);
-      background:
-        radial-gradient(circle at top, rgba(255, 91, 46, 0.09), rgba(255, 91, 46, 0) 35%),
-        linear-gradient(180deg, rgba(22, 12, 9, 0.98), rgba(10, 9, 13, 0.98));
+      background: var(--map-stage-background);
       overflow: hidden;
+      transition: background 220ms ease;
     }
 
     .map {
@@ -455,21 +557,18 @@
         background 180ms ease,
         box-shadow 180ms ease,
         border-color 180ms ease;
-      font-size: clamp(0.72rem, calc(var(--cell-size) * 0.22), 1rem);
-      font-family: "Space Grotesk", sans-serif;
-      font-weight: 700;
     }
 
     .cell-open {
-      color: rgba(255, 214, 196, 0.65);
-      background: linear-gradient(180deg, #2c1712, #1f1311);
+      color: var(--surface-open-text);
+      background: var(--surface-open-bg);
       border: 1px solid var(--surface-open-line);
     }
 
     .cell-visited {
-      color: rgba(255, 239, 228, 0.84);
-      background: linear-gradient(180deg, #9e5535, #713826);
-      border: 1px solid rgba(255, 180, 146, 0.16);
+      color: var(--surface-visited-text);
+      background: var(--surface-visited-bg);
+      border: 1px solid var(--surface-visited-line);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
@@ -478,21 +577,20 @@
       position: absolute;
       inset: 18%;
       border-radius: 999px;
-      background: rgba(255, 91, 46, 0.12);
+      background: var(--surface-unvisited-glow);
       filter: blur(6px);
     }
 
     .cell-wall {
-      color: transparent;
-      background: linear-gradient(180deg, #1e2531, #121821);
+      background: var(--surface-wall-bg);
       border: 1px solid var(--surface-wall-line);
-      box-shadow: inset 0 -10px 18px rgba(0, 0, 0, 0.34);
+      box-shadow: inset 0 -10px 18px rgba(0, 0, 0, 0.28);
     }
 
     .cell-rover {
       box-shadow:
-        0 0 0 2px rgba(255, 91, 46, 0.16),
-        0 0 24px rgba(255, 91, 46, 0.18);
+        0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent),
+        0 0 24px var(--rover-glow);
       transform: translateY(-1px);
       z-index: 2;
     }
@@ -501,13 +599,22 @@
       animation: collision-shake 360ms ease;
     }
 
-    .rover-icon {
+    .rover-icon,
+    .wall-icon {
       width: calc(var(--cell-size) * 0.82);
       height: calc(var(--cell-size) * 0.82);
       display: block;
+    }
+
+    .rover-icon {
       transform: rotate(var(--rover-rotation, 0deg));
       transition: transform 180ms ease, filter 180ms ease;
-      filter: drop-shadow(0 0 8px rgba(255, 91, 46, 0.34));
+      filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 36%, transparent));
+    }
+
+    .wall-icon {
+      opacity: 0.92;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.28));
     }
 
     .fuel-rail {
@@ -518,7 +625,7 @@
       gap: 10px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--card-bg);
     }
 
     .fuel-readout-title {
@@ -553,8 +660,8 @@
       width: 100%;
       height: 0%;
       border-radius: 999px;
-      background: linear-gradient(180deg, #ffbd81, #ff5b2e);
-      transition: height 180ms ease, background 180ms ease, box-shadow 180ms ease;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 35%, white), var(--accent));
+      transition: height 180ms ease, width 180ms ease, background 180ms ease, box-shadow 180ms ease;
     }
 
     .fuel-scale {
@@ -570,7 +677,7 @@
       inset: 0;
       display: none;
       place-items: center;
-      background: rgba(5, 7, 11, 0.82);
+      background: var(--overlay-backdrop);
       backdrop-filter: blur(8px);
       z-index: 5;
     }
@@ -585,7 +692,7 @@
       padding: 28px;
       border-radius: 28px;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      background: linear-gradient(180deg, rgba(14, 20, 31, 0.98), rgba(8, 11, 18, 0.98));
+      background: var(--overlay-card-bg);
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
       text-align: center;
       overflow: hidden;
@@ -599,41 +706,23 @@
       pointer-events: none;
     }
 
-    /* Fallback visual treatment instead of embedded SpaceX Flickr data URI to keep the dev page lightweight. */
     .overlay-card::before {
-      background:
-        radial-gradient(circle at 62% 18%, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
-        linear-gradient(180deg, rgba(6, 8, 13, 0.05), rgba(6, 8, 13, 0.72)),
-        radial-gradient(circle at 50% 0%, rgba(255, 196, 156, 0.34), rgba(255, 196, 156, 0) 24%),
-        linear-gradient(180deg, rgba(150, 162, 178, 0.16), rgba(34, 41, 52, 0.14)),
-        radial-gradient(circle at 50% 122%, rgba(255, 91, 46, 0.42), rgba(255, 91, 46, 0) 28%);
-      opacity: 0.8;
+      background: var(--overlay-base);
+      opacity: 0.9;
     }
 
     .overlay-card::after {
       background:
         linear-gradient(180deg, rgba(7, 11, 18, 0.22), rgba(7, 11, 18, 0.82)),
-        linear-gradient(135deg, rgba(255, 91, 46, 0.14), transparent 42%);
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 14%, transparent), transparent 42%);
     }
 
     .overlay-card.overlay-success::before {
-      background:
-        radial-gradient(circle at 50% 14%, rgba(255, 222, 198, 0.9) 0 3px, transparent 5px),
-        radial-gradient(circle at 66% 24%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
-        linear-gradient(180deg, rgba(6, 8, 13, 0.08), rgba(6, 8, 13, 0.76)),
-        radial-gradient(circle at 50% 118%, rgba(255, 148, 85, 0.52), rgba(255, 148, 85, 0) 22%),
-        linear-gradient(180deg, rgba(175, 184, 197, 0.18), rgba(38, 42, 51, 0.12));
+      background: var(--overlay-success);
     }
 
     .overlay-card.overlay-failed::before {
-      background:
-        radial-gradient(circle at 64% 16%, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 18% 26%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1.5px),
-        linear-gradient(180deg, rgba(6, 8, 13, 0.18), rgba(6, 8, 13, 0.82)),
-        radial-gradient(circle at 50% 118%, rgba(255, 88, 88, 0.42), rgba(255, 88, 88, 0) 22%),
-        linear-gradient(180deg, rgba(116, 118, 126, 0.12), rgba(36, 33, 37, 0.12));
+      background: var(--overlay-failed);
     }
 
     .overlay-card > * {
@@ -738,13 +827,23 @@
         padding: 12px;
       }
 
-      .topbar {
+      .topbar,
+      .surface-head {
         flex-direction: column;
         align-items: flex-start;
       }
 
+      .topbar-side {
+        width: 100%;
+        justify-items: stretch;
+      }
+
       .subtitle {
         text-align: left;
+      }
+
+      .theme-picker {
+        width: 100%;
       }
 
       .field-grid,
@@ -759,21 +858,27 @@
   <main>
     <header class="topbar">
       <div class="brand">
-        <div class="eyebrow">Mission Control</div>
-        <h1 class="title">MARS ROVER — Occupy Mars</h1>
+        <div id="eyebrow" class="eyebrow">Mission Control</div>
+        <h1 id="page-title" class="title">MARS ROVER — Occupy Mars</h1>
       </div>
-      <p class="subtitle">한 화면 안에서 화성 지형을 추적하고, 실시간 입력으로 로버를 조종하며, 임무 성공 또는 실패를 즉시 확인합니다.</p>
+      <div class="topbar-side">
+        <label class="theme-picker" for="theme-select">
+          <span id="theme-picker-label" class="theme-picker-label">Theme</span>
+          <select id="theme-select" class="theme-select" aria-label="게임 테마 선택"></select>
+        </label>
+        <p id="subtitle" class="subtitle">한 화면 안에서 화성 지형을 추적하고, 실시간 입력으로 로버를 조종하며, 임무 성공 또는 실패를 즉시 확인합니다.</p>
+      </div>
     </header>
 
     <section class="layout">
       <section class="panel controls">
         <div class="field-grid">
           <div class="field">
-            <label class="label" for="height">Height</label>
+            <label id="height-label" class="label" for="height">Height</label>
             <input id="height" type="number" min="3" max="20" value="5">
           </div>
           <div class="field">
-            <label class="label" for="width">Width</label>
+            <label id="width-label" class="label" for="width">Width</label>
             <input id="width" type="number" min="3" max="20" value="5">
           </div>
         </div>
@@ -782,27 +887,27 @@
 
         <div class="metrics">
           <div id="fuel-card" class="metric-card">
-            <div class="metric-title">Fuel</div>
+            <div id="fuel-label-main" class="metric-title">Fuel</div>
             <div id="fuel-value" class="metric-value">0</div>
           </div>
           <div class="metric-card">
-            <div class="metric-title">Mission</div>
+            <div id="mission-label-main" class="metric-title">Mission</div>
             <div id="mission-value" class="metric-value mission-in-progress">탐사 진행 중</div>
           </div>
           <div class="target-card">
-            <div class="metric-title">Target</div>
+            <div id="target-label-main" class="metric-title">Target</div>
             <div id="target-value" class="target-value">0칸</div>
-            <p class="metric-copy">도달 가능한 최대 탐사 칸 수</p>
+            <p id="target-copy" class="metric-copy">도달 가능한 최대 탐사 칸 수</p>
           </div>
           <div class="metric-card">
-            <div class="metric-title">Progress</div>
+            <div id="progress-label-main" class="metric-title">Progress</div>
             <div id="progress-value" class="metric-value">0 / 0</div>
           </div>
         </div>
 
         <div class="command-zone">
           <div class="field">
-            <label class="label" for="command-input">Command Stream</label>
+            <label id="command-label" class="label" for="command-input">Command Stream</label>
             <input id="command-input" type="text" placeholder="예: ↑↓↑↓">
           </div>
 
@@ -816,7 +921,7 @@
           </div>
 
           <button id="send-button" class="secondary-button" type="button">EXECUTE</button>
-          <div class="hint">Keyboard arrows available. 입력창에 포커스가 없을 때는 화살표 키로 즉시 1칸 이동합니다.</div>
+          <div id="hint" class="hint">Keyboard arrows available. 입력창에 포커스가 없을 때는 화살표 키로 즉시 1칸 이동합니다.</div>
         </div>
 
         <div id="status" class="status">맵이 아직 생성되지 않았습니다.</div>
@@ -825,17 +930,17 @@
       <section class="panel surface">
         <div class="surface-head">
           <div>
-            <h2 class="surface-title">Surface Grid</h2>
-            <p class="surface-copy">실시간 위치 추적, 방문 색상, 충돌 피드백, 미션 종료 오버레이를 지원합니다.</p>
+            <h2 id="surface-title" class="surface-title">Surface Grid</h2>
+            <p id="surface-copy" class="surface-copy">실시간 위치 추적, 방문 색상, 충돌 피드백, 미션 종료 오버레이를 지원합니다.</p>
           </div>
-          <div class="surface-badge">Live Control Enabled</div>
+          <div id="surface-badge" class="surface-badge">Live Control Enabled</div>
         </div>
 
         <div class="legend">
-          <span><i class="dot" style="background: #38211c"></i>미탐사</span>
-          <span><i class="dot" style="background: #8f472e"></i>탐사 완료</span>
-          <span><i class="dot" style="background: #171c27"></i>장애물</span>
-          <span><i class="dot" style="background: #ff5b2e"></i>로버</span>
+          <span><i class="dot dot-open"></i><span id="legend-open">미탐사</span></span>
+          <span><i class="dot dot-visited"></i><span id="legend-visited">탐사 완료</span></span>
+          <span><i class="dot dot-wall"></i><span id="legend-wall">장애물</span></span>
+          <span><i class="dot dot-rover"></i><span id="legend-rover">로버</span></span>
         </div>
 
         <div class="surface-body">
@@ -844,7 +949,7 @@
           </div>
 
           <aside id="fuel-rail" class="fuel-rail" aria-label="연료 소모량">
-            <div class="fuel-readout-title">Fuel</div>
+            <div id="fuel-rail-title" class="fuel-readout-title">Fuel</div>
             <div id="fuel-side-value" class="fuel-readout-value">0</div>
             <div class="fuel-gauge" aria-hidden="true">
               <div id="fuel-gauge-fill" class="fuel-gauge-fill"></div>
@@ -862,11 +967,11 @@
             <p id="overlay-copy" class="overlay-copy">탐사를 마쳤습니다.</p>
             <div class="overlay-stats">
               <div class="overlay-stat">
-                <div class="overlay-stat-label">Explored</div>
+                <div id="overlay-explored-label" class="overlay-stat-label">Explored</div>
                 <div id="overlay-explored" class="overlay-stat-value">0 / 0</div>
               </div>
               <div class="overlay-stat">
-                <div class="overlay-stat-label">Fuel Used</div>
+                <div id="overlay-fuel-label" class="overlay-stat-label">Fuel Used</div>
                 <div id="overlay-fuel" class="overlay-stat-value">0</div>
               </div>
             </div>
@@ -878,6 +983,8 @@
   </main>
 
   <script>
+    const THEME_STORAGE_KEY = "mars-rover-theme";
+
     const mapElement = document.getElementById("map");
     const statusElement = document.getElementById("status");
     const initButton = document.getElementById("init-button");
@@ -889,50 +996,603 @@
     const fuelValueElement = document.getElementById("fuel-value");
     const fuelCardElement = document.getElementById("fuel-card");
     const fuelRailElement = document.getElementById("fuel-rail");
+    const fuelRailTitleElement = document.getElementById("fuel-rail-title");
     const fuelSideValueElement = document.getElementById("fuel-side-value");
     const fuelGaugeFillElement = document.getElementById("fuel-gauge-fill");
     const missionValueElement = document.getElementById("mission-value");
     const targetValueElement = document.getElementById("target-value");
     const progressValueElement = document.getElementById("progress-value");
     const overlayElement = document.getElementById("mission-overlay");
+    const overlayCardElement = overlayElement.querySelector(".overlay-card");
     const overlayTitleElement = document.getElementById("overlay-title");
     const overlayCopyElement = document.getElementById("overlay-copy");
+    const overlayExploredLabelElement = document.getElementById("overlay-explored-label");
     const overlayExploredElement = document.getElementById("overlay-explored");
+    const overlayFuelLabelElement = document.getElementById("overlay-fuel-label");
     const overlayFuelElement = document.getElementById("overlay-fuel");
     const directionButtons = document.querySelectorAll(".direction-button");
+    const themeSelectElement = document.getElementById("theme-select");
+    const eyebrowElement = document.getElementById("eyebrow");
+    const pageTitleElement = document.getElementById("page-title");
+    const subtitleElement = document.getElementById("subtitle");
+    const themePickerLabelElement = document.getElementById("theme-picker-label");
+    const heightLabelElement = document.getElementById("height-label");
+    const widthLabelElement = document.getElementById("width-label");
+    const fuelLabelMainElement = document.getElementById("fuel-label-main");
+    const missionLabelMainElement = document.getElementById("mission-label-main");
+    const targetLabelMainElement = document.getElementById("target-label-main");
+    const targetCopyElement = document.getElementById("target-copy");
+    const progressLabelMainElement = document.getElementById("progress-label-main");
+    const commandLabelElement = document.getElementById("command-label");
+    const hintElement = document.getElementById("hint");
+    const surfaceTitleElement = document.getElementById("surface-title");
+    const surfaceCopyElement = document.getElementById("surface-copy");
+    const surfaceBadgeElement = document.getElementById("surface-badge");
+    const legendOpenElement = document.getElementById("legend-open");
+    const legendVisitedElement = document.getElementById("legend-visited");
+    const legendWallElement = document.getElementById("legend-wall");
+    const legendRoverElement = document.getElementById("legend-rover");
 
-    const ROVER_MARKUP = `
+    const SPACE_ROVER = `
       <svg class="rover-icon" viewBox="0 0 64 64" aria-hidden="true">
-        <defs>
-          <linearGradient id="starshipHull" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#eef3fa" />
-            <stop offset="34%" stop-color="#b9c2d0" />
-            <stop offset="64%" stop-color="#7a8495" />
-            <stop offset="100%" stop-color="#dfe5ef" />
-          </linearGradient>
-          <linearGradient id="starshipWindow" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#0f1522" />
-            <stop offset="100%" stop-color="#2e3b4f" />
-          </linearGradient>
-          <linearGradient id="starshipFlame" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stop-color="#d7f4ff" />
-            <stop offset="32%" stop-color="#7ad8ff" />
-            <stop offset="68%" stop-color="#ffad4d" />
-            <stop offset="100%" stop-color="#ff5b2e" />
-          </linearGradient>
-        </defs>
-        <g>
-          <path d="M32 3 C37 4 40 7 41 12 L41 40 C41 48 38 53 32 58 C26 53 23 48 23 40 L23 12 C24 7 27 4 32 3 Z" fill="url(#starshipHull)" />
-          <path d="M27 18 C29 15 35 15 37 18 L37 24 C35 26 29 26 27 24 Z" fill="url(#starshipWindow)" />
-          <path d="M23 34 L16 40 L22 42 L23 38 Z" fill="#98a4b6" />
-          <path d="M41 34 L48 40 L42 42 L41 38 Z" fill="#98a4b6" />
-          <path d="M27 43 L20 48 L24 51 L28 46 Z" fill="#aeb7c5" />
-          <path d="M37 43 L44 48 L40 51 L36 46 Z" fill="#aeb7c5" />
-          <path d="M27 56 C29 60 31 63 32 63 C33 63 35 60 37 56 C35 54 34 52 32 52 C30 52 29 54 27 56 Z" fill="url(#starshipFlame)" />
-          <path d="M29 11 C31 9 33 9 35 11" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="1.6" stroke-linecap="round" />
-        </g>
+        <path d="M32 4C37 5 40 8 41 13V40C41 48 38 53 32 58C26 53 23 48 23 40V13C24 8 27 5 32 4Z" fill="#e8eef7"/>
+        <path d="M27 18C29 15 35 15 37 18V24C35 26 29 26 27 24Z" fill="#253349"/>
+        <path d="M23 34L16 40L22 42L23 38Z" fill="#a0acbb"/>
+        <path d="M41 34L48 40L42 42L41 38Z" fill="#a0acbb"/>
+        <path d="M27 43L20 48L24 51L28 46Z" fill="#bac3cf"/>
+        <path d="M37 43L44 48L40 51L36 46Z" fill="#bac3cf"/>
+        <path d="M27 56C29 60 31 63 32 63C33 63 35 60 37 56C35 54 34 52 32 52C30 52 29 54 27 56Z" fill="#ff7a36"/>
       </svg>
     `;
+
+    const DINO_ROVER = `
+      <svg class="rover-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="trexBody" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#9ce86f"/>
+            <stop offset="100%" stop-color="#4d9636"/>
+          </linearGradient>
+        </defs>
+        <path d="M3 28C11 24 19 25 26 31L21 40C13 39 7 34 3 28Z" fill="url(#trexBody)"/>
+        <path d="M22 27L26 17L30 25L34 15L38 24L42 16L46 24L40 31L26 31Z" fill="#39762a"/>
+        <path d="M26 47L24 59L31 59L30 48Z" fill="#3f8230"/>
+        <path d="M37 47L37 59L44 59L40 48Z" fill="#3f8230"/>
+        <ellipse cx="33" cy="37" rx="15" ry="13" fill="url(#trexBody)"/>
+        <ellipse cx="30" cy="42" rx="9" ry="6" fill="#c8f5a0" opacity="0.8"/>
+        <path d="M41 37L47 41L44 44L40 41Z" fill="#3f8230"/>
+        <path d="M40 13C52 10 61 16 62 24C62 30 57 35 50 36L43 33L40 26Z" fill="url(#trexBody)"/>
+        <path d="M47 30L62 26L60 33C56 36 51 36 47 34Z" fill="#3f8230"/>
+        <path d="M48 29L51 31.5L54 28.5L57 31L60 27.5L62 26L47 30Z" fill="#ffffff"/>
+        <circle cx="50" cy="20" r="2.4" fill="#142c0e"/>
+        <circle cx="50.9" cy="19.1" r="0.8" fill="#eaffdf"/>
+      </svg>
+    `;
+
+    const SHARK_ROVER = `
+      <svg class="rover-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M10 34C17 25 26 19 38 18C46 17 52 21 57 27L51 30L58 35C54 40 49 44 42 46C30 49 19 46 10 34Z" fill="#79dbff"/>
+        <path d="M28 22L33 10L42 22" fill="#4bc0f0"/>
+        <path d="M25 45L29 56L37 44" fill="#6bd5f8"/>
+        <circle cx="43" cy="28" r="2" fill="#11354a"/>
+        <path d="M47 35C45 38 41 40 36 40C31 40 27 38 25 35" fill="none" stroke="#fefefe" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    const CROC_ROVER = `
+      <svg class="rover-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="crocBody" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#5da83f"/>
+            <stop offset="50%" stop-color="#82d15a"/>
+            <stop offset="100%" stop-color="#5da83f"/>
+          </linearGradient>
+        </defs>
+        <path d="M27 4C27 2 37 2 37 4L38 15H26Z" fill="#6fbf4a"/>
+        <circle cx="29.5" cy="6.5" r="1.3" fill="#1c3a12"/>
+        <circle cx="34.5" cy="6.5" r="1.3" fill="#1c3a12"/>
+        <path d="M22 26L11 21L13 30L22 32Z" fill="#4f9138"/>
+        <path d="M42 26L53 21L51 30L42 32Z" fill="#4f9138"/>
+        <path d="M22 38L11 33L13 42L22 44Z" fill="#4f9138"/>
+        <path d="M42 38L53 33L51 42L42 44Z" fill="#4f9138"/>
+        <path d="M26 14C22 16 21 20 22 25C20 32 20 38 22 44C26 48 38 48 42 44C44 38 44 32 42 25C43 20 42 16 38 14Z" fill="url(#crocBody)"/>
+        <circle cx="26.5" cy="18" r="2.4" fill="#f4f0c8"/>
+        <circle cx="37.5" cy="18" r="2.4" fill="#f4f0c8"/>
+        <circle cx="26.5" cy="18" r="1.2" fill="#132b0c"/>
+        <circle cx="37.5" cy="18" r="1.2" fill="#132b0c"/>
+        <path d="M32 24L34.6 28.5L32 33L29.4 28.5Z" fill="#3e7c2b"/>
+        <path d="M32 33L34.6 37.5L32 42L29.4 37.5Z" fill="#3e7c2b"/>
+        <path d="M26 45C27 52 29 58 32 62C35 58 37 52 38 45C34 48 30 48 26 45Z" fill="#6fbf4a"/>
+        <path d="M32 48L33.8 52L32 56L30.2 52Z" fill="#3e7c2b"/>
+      </svg>
+    `;
+
+    const BUNNY_ROVER = `
+      <svg class="rover-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <ellipse cx="25" cy="16" rx="6" ry="14" fill="#fff6f7"/>
+        <ellipse cx="39" cy="16" rx="6" ry="14" fill="#fff6f7"/>
+        <ellipse cx="25" cy="17" rx="2.5" ry="9" fill="#ffc7da"/>
+        <ellipse cx="39" cy="17" rx="2.5" ry="9" fill="#ffc7da"/>
+        <circle cx="32" cy="36" r="16" fill="#fffaf8"/>
+        <circle cx="26" cy="34" r="2" fill="#2d2a31"/>
+        <circle cx="38" cy="34" r="2" fill="#2d2a31"/>
+        <circle cx="32" cy="39" r="2.4" fill="#ff8db0"/>
+        <path d="M28 43C30 45 34 45 36 43" fill="none" stroke="#ff8db0" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    const SPACE_WALL = `
+      <svg class="wall-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M18 48L8 34L14 18L31 10L49 16L56 31L50 47L35 55Z" fill="#8d95a4"/>
+        <path d="M24 41L20 31L30 20L43 24L46 37L36 46Z" fill="#5c6472"/>
+      </svg>
+    `;
+
+    const DINO_WALL = `
+      <svg class="wall-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M18 52L24 37L32 18L40 37L46 52Z" fill="#a84f2a"/>
+        <path d="M25 36L29 26L35 26L39 36Z" fill="#d86c38"/>
+        <path d="M28 26L31 18L33 18L36 26Z" fill="#f7d09a"/>
+        <path d="M12 51C17 44 22 42 27 44" stroke="#5d8c38" stroke-width="3" stroke-linecap="round"/>
+        <path d="M52 51C47 44 42 42 37 44" stroke="#5d8c38" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    const SHARK_WALL = `
+      <svg class="wall-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M20 48C18 39 21 30 28 23C35 31 38 39 38 48Z" fill="#ff8f6e"/>
+        <path d="M38 48C38 39 41 31 48 26C53 33 54 41 52 48Z" fill="#ffbb66"/>
+        <path d="M14 50C16 42 20 38 26 36" stroke="#8cf7ff" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    const CROC_WALL = `
+      <svg class="wall-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M10 39C16 30 28 27 43 30C48 31 52 34 55 38C49 46 38 50 24 49C18 49 13 46 10 39Z" fill="#72563b"/>
+        <path d="M22 23L28 15L34 23" fill="none" stroke="#8fd46a" stroke-width="3" stroke-linecap="round"/>
+        <path d="M34 21L40 12L46 21" fill="none" stroke="#7fc85a" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    const BUNNY_WALL = `
+      <svg class="wall-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M18 51V24M30 51V20M42 51V24" stroke="#ffe8ba" stroke-width="5" stroke-linecap="round"/>
+        <path d="M14 31H46M14 41H46" stroke="#ffd89c" stroke-width="4" stroke-linecap="round"/>
+        <path d="M48 47C49 39 53 33 58 29" stroke="#7fc257" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    const THEMES = {
+      space: {
+        optionLabel: "🚀 우주선",
+        colors: {
+          "--body-background": "radial-gradient(circle at 20% 20%, rgba(255, 111, 60, 0.12) 0, rgba(255, 111, 60, 0) 18%), radial-gradient(circle at 80% 15%, rgba(93, 119, 255, 0.12) 0, rgba(93, 119, 255, 0) 16%), linear-gradient(180deg, #05070b 0%, #0a1018 45%, #090d14 100%)",
+          "--sky-pattern": "radial-gradient(circle at 14% 22%, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.4px), radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px), radial-gradient(circle at 32% 68%, rgba(255, 255, 255, 0.8) 0 1px, transparent 1.4px), radial-gradient(circle at 88% 62%, rgba(255, 255, 255, 0.6) 0 1px, transparent 1.5px), radial-gradient(circle at 58% 42%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px)",
+          "--sky-opacity": "0.55",
+          "--topbar-start": "rgba(13, 18, 27, 0.95)",
+          "--topbar-end": "rgba(7, 11, 18, 0.92)",
+          "--panel-start": "rgba(12, 17, 27, 0.96)",
+          "--panel-end": "rgba(7, 11, 17, 0.94)",
+          "--card-bg": "rgba(255, 255, 255, 0.03)",
+          "--card-strong-bg": "linear-gradient(135deg, rgba(255, 91, 46, 0.14), rgba(255, 255, 255, 0.04))",
+          "--input-bg": "rgba(255, 255, 255, 0.04)",
+          "--input-border": "rgba(255, 255, 255, 0.08)",
+          "--button-secondary-bg": "rgba(255, 255, 255, 0.08)",
+          "--button-secondary-border": "rgba(255, 255, 255, 0.08)",
+          "--status-bg": "rgba(255, 255, 255, 0.04)",
+          "--status-border": "rgba(255, 255, 255, 0.06)",
+          "--map-stage-background": "radial-gradient(circle at top, rgba(255, 91, 46, 0.09), rgba(255, 91, 46, 0) 35%), linear-gradient(180deg, rgba(22, 12, 9, 0.98), rgba(10, 9, 13, 0.98))",
+          "--overlay-backdrop": "rgba(5, 7, 11, 0.82)",
+          "--overlay-card-bg": "linear-gradient(180deg, rgba(14, 20, 31, 0.98), rgba(8, 11, 18, 0.98))",
+          "--overlay-base": "radial-gradient(circle at 62% 18%, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px), radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px), linear-gradient(180deg, rgba(6, 8, 13, 0.05), rgba(6, 8, 13, 0.72)), radial-gradient(circle at 50% 0%, rgba(255, 196, 156, 0.34), rgba(255, 196, 156, 0) 24%), linear-gradient(180deg, rgba(150, 162, 178, 0.16), rgba(34, 41, 52, 0.14)), radial-gradient(circle at 50% 122%, rgba(255, 91, 46, 0.42), rgba(255, 91, 46, 0) 28%)",
+          "--overlay-success": "radial-gradient(circle at 50% 14%, rgba(255, 222, 198, 0.9) 0 3px, transparent 5px), radial-gradient(circle at 66% 24%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.5px), radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px), linear-gradient(180deg, rgba(6, 8, 13, 0.08), rgba(6, 8, 13, 0.76)), radial-gradient(circle at 50% 118%, rgba(255, 148, 85, 0.52), rgba(255, 148, 85, 0) 22%), linear-gradient(180deg, rgba(175, 184, 197, 0.18), rgba(38, 42, 51, 0.12))",
+          "--overlay-failed": "radial-gradient(circle at 64% 16%, rgba(255, 255, 255, 0.14) 0 1px, transparent 1.5px), radial-gradient(circle at 18% 26%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1.5px), linear-gradient(180deg, rgba(6, 8, 13, 0.18), rgba(6, 8, 13, 0.82)), radial-gradient(circle at 50% 118%, rgba(255, 88, 88, 0.42), rgba(255, 88, 88, 0) 22%), linear-gradient(180deg, rgba(116, 118, 126, 0.12), rgba(36, 33, 37, 0.12))",
+          "--text": "#f7f8fa",
+          "--muted": "#8c95a5",
+          "--accent": "#ff5b2e",
+          "--accent-strong": "#ff7b3d",
+          "--accent-soft": "rgba(255, 91, 46, 0.16)",
+          "--line": "rgba(255, 255, 255, 0.08)",
+          "--line-strong": "rgba(255, 255, 255, 0.14)",
+          "--success": "#63e6be",
+          "--warning": "#ff6b6b",
+          "--warning-color": "#ff7d7d",
+          "--warning-glow": "rgba(255, 107, 107, 0.42)",
+          "--warning-fill-start": "#ffb199",
+          "--warning-fill-end": "#ff4d4d",
+          "--surface-open-text": "rgba(255, 214, 196, 0.65)",
+          "--surface-open-bg": "linear-gradient(180deg, #2c1712, #1f1311)",
+          "--surface-open-line": "rgba(255, 166, 135, 0.12)",
+          "--surface-visited-text": "rgba(255, 239, 228, 0.84)",
+          "--surface-visited-bg": "linear-gradient(180deg, #9e5535, #713826)",
+          "--surface-visited-line": "rgba(255, 180, 146, 0.16)",
+          "--surface-unvisited-glow": "rgba(255, 91, 46, 0.12)",
+          "--surface-wall-bg": "linear-gradient(180deg, #1e2531, #121821)",
+          "--surface-wall-line": "rgba(255, 255, 255, 0.05)",
+          "--rover-glow": "rgba(255, 91, 46, 0.18)"
+        },
+        characterMarkup: SPACE_ROVER,
+        obstacleMarkup: SPACE_WALL,
+        copy: {
+          eyebrow: "Mission Control",
+          title: "MARS ROVER — Occupy Mars",
+          subtitle: "한 화면 안에서 화성 지형을 추적하고, 실시간 입력으로 로버를 조종하며, 임무 성공 또는 실패를 즉시 확인합니다.",
+          themeLabel: "Theme",
+          heightLabel: "Height",
+          widthLabel: "Width",
+          initButton: "LAUNCH GRID",
+          fuelLabel: "Fuel",
+          missionLabel: "Mission",
+          targetLabel: "Target",
+          targetCopy: "도달 가능한 최대 탐사 칸 수",
+          progressLabel: "Progress",
+          commandLabel: "Command Stream",
+          commandPlaceholder: "예: ↑↓↑↓",
+          sendButton: "EXECUTE",
+          hint: "Keyboard arrows available. 입력창에 포커스가 없을 때는 화살표 키로 즉시 1칸 이동합니다.",
+          surfaceTitle: "Surface Grid",
+          surfaceCopy: "실시간 위치 추적, 방문 색상, 충돌 피드백, 미션 종료 오버레이를 지원합니다.",
+          surfaceBadge: "Live Control Enabled",
+          legendOpen: "미탐사",
+          legendVisited: "탐사 완료",
+          legendWall: "암석",
+          legendRover: "우주선",
+          overlayExploredLabel: "Explored",
+          overlayFuelLabel: "Fuel Used",
+          retryButton: "다시 도전",
+          missionInProgress: "탐사 진행 중",
+          missionSuccess: "미션 성공",
+          missionFailed: "미션 실패",
+          overlaySuccessTitle: "MISSION SUCCESS",
+          overlayFailedTitle: "MISSION FAILED",
+          overlaySuccessCopy: "NOMINAL — 도달 가능한 모든 구역 탐사를 완료했습니다.",
+          overlayFailedCopy: "ABORT — 연료 한계에 도달해 임무가 종료되었습니다."
+        }
+      },
+      dino: {
+        optionLabel: "🦖 공룡",
+        colors: {
+          "--body-background": "radial-gradient(circle at 14% 18%, rgba(255, 170, 88, 0.18) 0, rgba(255, 170, 88, 0) 22%), radial-gradient(circle at 80% 16%, rgba(116, 176, 92, 0.18) 0, rgba(116, 176, 92, 0) 20%), linear-gradient(180deg, #10180d 0%, #1a2718 46%, #181510 100%)",
+          "--sky-pattern": "radial-gradient(circle at 12% 18%, rgba(255, 233, 201, 0.16) 0 18px, transparent 19px), radial-gradient(circle at 76% 14%, rgba(255, 178, 91, 0.14) 0 22px, transparent 23px), linear-gradient(135deg, rgba(120, 185, 84, 0.08) 25%, transparent 25%), linear-gradient(225deg, rgba(120, 185, 84, 0.06) 25%, transparent 25%), radial-gradient(circle at 60% 72%, rgba(255, 225, 178, 0.08) 0 14px, transparent 15px)",
+          "--sky-opacity": "0.48",
+          "--topbar-start": "rgba(25, 38, 22, 0.95)",
+          "--topbar-end": "rgba(16, 26, 15, 0.92)",
+          "--panel-start": "rgba(25, 39, 22, 0.96)",
+          "--panel-end": "rgba(18, 29, 17, 0.94)",
+          "--card-bg": "rgba(255, 255, 255, 0.035)",
+          "--card-strong-bg": "linear-gradient(135deg, rgba(214, 120, 58, 0.2), rgba(255, 255, 255, 0.03))",
+          "--input-bg": "rgba(255, 255, 255, 0.045)",
+          "--input-border": "rgba(214, 170, 117, 0.18)",
+          "--button-secondary-bg": "rgba(255, 255, 255, 0.06)",
+          "--button-secondary-border": "rgba(214, 170, 117, 0.16)",
+          "--status-bg": "rgba(255, 255, 255, 0.04)",
+          "--status-border": "rgba(214, 170, 117, 0.14)",
+          "--map-stage-background": "radial-gradient(circle at top, rgba(219, 118, 53, 0.14), rgba(219, 118, 53, 0) 34%), linear-gradient(180deg, rgba(38, 28, 18, 0.96), rgba(24, 34, 20, 0.98))",
+          "--overlay-backdrop": "rgba(12, 17, 10, 0.82)",
+          "--overlay-card-bg": "linear-gradient(180deg, rgba(29, 40, 20, 0.98), rgba(19, 28, 16, 0.98))",
+          "--overlay-base": "radial-gradient(circle at 20% 20%, rgba(255, 193, 122, 0.2) 0 20px, transparent 21px), radial-gradient(circle at 72% 18%, rgba(165, 219, 101, 0.18) 0 22px, transparent 23px), linear-gradient(180deg, rgba(32, 22, 15, 0.12), rgba(18, 26, 15, 0.74)), radial-gradient(circle at 50% 122%, rgba(207, 116, 66, 0.42), rgba(207, 116, 66, 0) 28%), linear-gradient(180deg, rgba(104, 141, 74, 0.18), rgba(37, 55, 28, 0.16))",
+          "--overlay-success": "radial-gradient(circle at 50% 14%, rgba(255, 228, 167, 0.94) 0 4px, transparent 5px), radial-gradient(circle at 66% 24%, rgba(177, 232, 114, 0.18) 0 18px, transparent 19px), linear-gradient(180deg, rgba(18, 27, 14, 0.16), rgba(18, 27, 14, 0.76)), radial-gradient(circle at 50% 118%, rgba(214, 119, 68, 0.52), rgba(214, 119, 68, 0) 22%), linear-gradient(180deg, rgba(154, 188, 107, 0.2), rgba(44, 59, 28, 0.14))",
+          "--overlay-failed": "radial-gradient(circle at 64% 16%, rgba(255, 214, 166, 0.16) 0 18px, transparent 19px), radial-gradient(circle at 18% 26%, rgba(255, 111, 97, 0.12) 0 20px, transparent 21px), linear-gradient(180deg, rgba(29, 18, 14, 0.22), rgba(19, 18, 14, 0.82)), radial-gradient(circle at 50% 118%, rgba(178, 71, 53, 0.44), rgba(178, 71, 53, 0) 22%), linear-gradient(180deg, rgba(123, 91, 61, 0.14), rgba(46, 34, 24, 0.12))",
+          "--text": "#f6f5ef",
+          "--muted": "#afb79f",
+          "--accent": "#db7635",
+          "--accent-strong": "#f0a445",
+          "--accent-soft": "rgba(219, 118, 53, 0.18)",
+          "--line": "rgba(255, 241, 216, 0.08)",
+          "--line-strong": "rgba(255, 241, 216, 0.14)",
+          "--success": "#9ce77c",
+          "--warning": "#ff8f6f",
+          "--warning-color": "#ffc1a4",
+          "--warning-glow": "rgba(255, 145, 99, 0.45)",
+          "--warning-fill-start": "#ffc56f",
+          "--warning-fill-end": "#f16c4f",
+          "--surface-open-text": "rgba(249, 221, 191, 0.72)",
+          "--surface-open-bg": "linear-gradient(180deg, #3a2d1f, #2c231a)",
+          "--surface-open-line": "rgba(255, 194, 137, 0.12)",
+          "--surface-visited-text": "rgba(247, 240, 228, 0.88)",
+          "--surface-visited-bg": "linear-gradient(180deg, #6c5b27, #4e421a)",
+          "--surface-visited-line": "rgba(243, 202, 123, 0.18)",
+          "--surface-unvisited-glow": "rgba(216, 116, 53, 0.14)",
+          "--surface-wall-bg": "linear-gradient(180deg, #384629, #232d1b)",
+          "--surface-wall-line": "rgba(203, 228, 160, 0.12)",
+          "--rover-glow": "rgba(219, 118, 53, 0.2)"
+        },
+        characterMarkup: DINO_ROVER,
+        obstacleMarkup: DINO_WALL,
+        copy: {
+          eyebrow: "Jurassic Control",
+          title: "DINO EXPLORER",
+          subtitle: "정글 지형을 헤치며 서식지를 탐사합니다. 테마를 바꿔도 현재 맵과 위치는 그대로 유지됩니다.",
+          themeLabel: "Theme",
+          heightLabel: "Height",
+          widthLabel: "Width",
+          initButton: "정글 생성",
+          fuelLabel: "체력",
+          missionLabel: "탐사 상태",
+          targetLabel: "탐사 목표",
+          targetCopy: "도달 가능한 최대 서식지 칸 수",
+          progressLabel: "탐사 진행도",
+          commandLabel: "이동 명령",
+          commandPlaceholder: "예: ↑↓↑↓",
+          sendButton: "이동 실행",
+          hint: "방향키로 즉시 움직일 수 있습니다. 입력창에 포커스가 있을 때는 실시간 조종이 비활성화됩니다.",
+          surfaceTitle: "Habitat Grid",
+          surfaceCopy: "티라노가 이동한 길은 색이 남고, 충돌 시 흔들림 효과와 종료 오버레이가 유지됩니다.",
+          surfaceBadge: "Dino Live Control",
+          legendOpen: "미탐사",
+          legendVisited: "탐사 완료",
+          legendWall: "화산/수풀",
+          legendRover: "티라노",
+          overlayExploredLabel: "Explored",
+          overlayFuelLabel: "Stamina",
+          retryButton: "다시 탐사",
+          missionInProgress: "서식지 탐사 중",
+          missionSuccess: "서식지 탐사 성공",
+          missionFailed: "체력 고갈",
+          overlaySuccessTitle: "HABITAT SECURED",
+          overlayFailedTitle: "EXPEDITION OVER",
+          overlaySuccessCopy: "서식지 확인 완료. 이동 가능한 모든 구역을 탐사했습니다.",
+          overlayFailedCopy: "체력이 바닥나 더 이상 전진할 수 없습니다."
+        }
+      },
+      shark: {
+        optionLabel: "🦈 아기상어",
+        colors: {
+          "--body-background": "radial-gradient(circle at 18% 14%, rgba(146, 234, 255, 0.34) 0, rgba(146, 234, 255, 0) 18%), radial-gradient(circle at 82% 16%, rgba(255, 200, 120, 0.18) 0, rgba(255, 200, 120, 0) 17%), linear-gradient(180deg, #dff9ff 0%, #b8ecff 48%, #90d7f7 100%)",
+          "--sky-pattern": "radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.5) 0 18px, transparent 19px), radial-gradient(circle at 78% 16%, rgba(255, 255, 255, 0.38) 0 14px, transparent 15px), radial-gradient(circle at 28% 68%, rgba(255, 255, 255, 0.32) 0 10px, transparent 11px), radial-gradient(circle at 88% 58%, rgba(255, 255, 255, 0.3) 0 12px, transparent 13px), radial-gradient(circle at 58% 42%, rgba(255, 255, 255, 0.28) 0 8px, transparent 9px)",
+          "--sky-opacity": "0.9",
+          "--topbar-start": "rgba(237, 252, 255, 0.92)",
+          "--topbar-end": "rgba(196, 236, 251, 0.92)",
+          "--panel-start": "rgba(239, 251, 255, 0.94)",
+          "--panel-end": "rgba(204, 241, 252, 0.94)",
+          "--card-bg": "rgba(255, 255, 255, 0.42)",
+          "--card-strong-bg": "linear-gradient(135deg, rgba(74, 200, 242, 0.24), rgba(255, 255, 255, 0.5))",
+          "--input-bg": "rgba(255, 255, 255, 0.62)",
+          "--input-border": "rgba(90, 180, 219, 0.22)",
+          "--button-secondary-bg": "rgba(255, 255, 255, 0.58)",
+          "--button-secondary-border": "rgba(90, 180, 219, 0.18)",
+          "--status-bg": "rgba(255, 255, 255, 0.52)",
+          "--status-border": "rgba(90, 180, 219, 0.16)",
+          "--map-stage-background": "radial-gradient(circle at top, rgba(98, 213, 255, 0.18), rgba(98, 213, 255, 0) 35%), linear-gradient(180deg, rgba(196, 243, 255, 0.98), rgba(126, 207, 235, 0.98))",
+          "--overlay-backdrop": "rgba(118, 196, 219, 0.46)",
+          "--overlay-card-bg": "linear-gradient(180deg, rgba(233, 250, 255, 0.97), rgba(195, 236, 247, 0.97))",
+          "--overlay-base": "radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.62) 0 16px, transparent 17px), radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.26) 0 14px, transparent 15px), linear-gradient(180deg, rgba(178, 233, 251, 0.16), rgba(126, 209, 235, 0.6)), radial-gradient(circle at 50% 118%, rgba(98, 205, 245, 0.32), rgba(98, 205, 245, 0) 24%), linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(93, 193, 227, 0.08))",
+          "--overlay-success": "radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.72) 0 12px, transparent 13px), radial-gradient(circle at 66% 24%, rgba(92, 214, 248, 0.22) 0 18px, transparent 19px), linear-gradient(180deg, rgba(205, 244, 255, 0.2), rgba(138, 214, 240, 0.68)), radial-gradient(circle at 50% 118%, rgba(255, 192, 116, 0.28), rgba(255, 192, 116, 0) 22%), linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(82, 189, 226, 0.08))",
+          "--overlay-failed": "radial-gradient(circle at 64% 16%, rgba(255, 255, 255, 0.34) 0 18px, transparent 19px), radial-gradient(circle at 18% 26%, rgba(255, 150, 150, 0.14) 0 18px, transparent 19px), linear-gradient(180deg, rgba(210, 236, 246, 0.28), rgba(144, 190, 206, 0.72)), radial-gradient(circle at 50% 118%, rgba(255, 122, 122, 0.24), rgba(255, 122, 122, 0) 22%), linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(137, 178, 194, 0.08))",
+          "--text": "#15374b",
+          "--muted": "#4f7f95",
+          "--accent": "#1fb7f0",
+          "--accent-strong": "#0e8fdd",
+          "--accent-soft": "rgba(31, 183, 240, 0.16)",
+          "--line": "rgba(21, 78, 105, 0.12)",
+          "--line-strong": "rgba(21, 78, 105, 0.18)",
+          "--success": "#127d64",
+          "--warning": "#dd5c6f",
+          "--warning-color": "#dd4d65",
+          "--warning-glow": "rgba(221, 92, 111, 0.28)",
+          "--warning-fill-start": "#ffd692",
+          "--warning-fill-end": "#ff8b7a",
+          "--surface-open-text": "rgba(20, 84, 111, 0.58)",
+          "--surface-open-bg": "linear-gradient(180deg, #e8fbff, #bcefff)",
+          "--surface-open-line": "rgba(83, 170, 205, 0.16)",
+          "--surface-visited-text": "rgba(16, 70, 93, 0.86)",
+          "--surface-visited-bg": "linear-gradient(180deg, #9feaff, #61c9ef)",
+          "--surface-visited-line": "rgba(71, 174, 216, 0.2)",
+          "--surface-unvisited-glow": "rgba(31, 183, 240, 0.14)",
+          "--surface-wall-bg": "linear-gradient(180deg, #7ebbd3, #4b8faa)",
+          "--surface-wall-line": "rgba(255, 255, 255, 0.18)",
+          "--rover-glow": "rgba(31, 183, 240, 0.24)"
+        },
+        characterMarkup: SHARK_ROVER,
+        obstacleMarkup: SHARK_WALL,
+        copy: {
+          eyebrow: "Ocean Control",
+          title: "BABY SHARK ADVENTURE",
+          subtitle: "맑은 바다 속에서 길을 찾고 산소를 관리합니다. 현재 탐사 상태는 테마를 바꿔도 그대로 유지됩니다.",
+          themeLabel: "Theme",
+          heightLabel: "Height",
+          widthLabel: "Width",
+          initButton: "바다 생성",
+          fuelLabel: "산소",
+          missionLabel: "탐험 상태",
+          targetLabel: "탐험 목표",
+          targetCopy: "도달 가능한 최대 바다 칸 수",
+          progressLabel: "탐험 진행도",
+          commandLabel: "이동 명령",
+          commandPlaceholder: "예: ↑↓↑↓",
+          sendButton: "헤엄치기",
+          hint: "화살표 키를 누르면 상어가 바로 한 칸 이동합니다. 입력창 포커스 중에는 즉시 이동하지 않습니다.",
+          surfaceTitle: "Ocean Grid",
+          surfaceCopy: "방문한 바닷길은 선명하게 남고, 충돌 경고와 종료 오버레이가 그대로 유지됩니다.",
+          surfaceBadge: "Swim Control Online",
+          legendOpen: "미탐험",
+          legendVisited: "탐험 완료",
+          legendWall: "산호/암초",
+          legendRover: "상어",
+          overlayExploredLabel: "Explored",
+          overlayFuelLabel: "Oxygen",
+          retryButton: "다시 헤엄치기",
+          missionInProgress: "바다 탐험 중",
+          missionSuccess: "바다 탐험 성공",
+          missionFailed: "산소 부족",
+          overlaySuccessTitle: "OCEAN CLEAR",
+          overlayFailedTitle: "DEEP BLUE STOP",
+          overlaySuccessCopy: "바다 탐험 성공! 이동 가능한 모든 물길을 확인했습니다.",
+          overlayFailedCopy: "숨이 차서 집에 돌아갔어요. 산소를 모두 사용했습니다."
+        }
+      },
+      croc: {
+        optionLabel: "🐊 악어",
+        colors: {
+          "--body-background": "radial-gradient(circle at 18% 14%, rgba(159, 214, 112, 0.18) 0, rgba(159, 214, 112, 0) 20%), radial-gradient(circle at 82% 18%, rgba(176, 140, 89, 0.18) 0, rgba(176, 140, 89, 0) 20%), linear-gradient(180deg, #0f1712 0%, #1d2417 42%, #2a2119 100%)",
+          "--sky-pattern": "radial-gradient(circle at 14% 22%, rgba(214, 234, 196, 0.16) 0 18px, transparent 19px), radial-gradient(circle at 72% 18%, rgba(186, 164, 129, 0.14) 0 20px, transparent 21px), linear-gradient(135deg, rgba(155, 205, 116, 0.06) 25%, transparent 25%), linear-gradient(225deg, rgba(155, 205, 116, 0.05) 25%, transparent 25%), radial-gradient(circle at 58% 42%, rgba(255, 255, 255, 0.04) 0 12px, transparent 13px)",
+          "--sky-opacity": "0.5",
+          "--topbar-start": "rgba(23, 32, 22, 0.95)",
+          "--topbar-end": "rgba(17, 24, 17, 0.92)",
+          "--panel-start": "rgba(24, 34, 23, 0.96)",
+          "--panel-end": "rgba(18, 26, 18, 0.94)",
+          "--card-bg": "rgba(255, 255, 255, 0.035)",
+          "--card-strong-bg": "linear-gradient(135deg, rgba(125, 195, 74, 0.18), rgba(126, 94, 60, 0.16))",
+          "--input-bg": "rgba(255, 255, 255, 0.045)",
+          "--input-border": "rgba(169, 196, 126, 0.18)",
+          "--button-secondary-bg": "rgba(255, 255, 255, 0.06)",
+          "--button-secondary-border": "rgba(169, 196, 126, 0.16)",
+          "--status-bg": "rgba(255, 255, 255, 0.04)",
+          "--status-border": "rgba(169, 196, 126, 0.14)",
+          "--map-stage-background": "radial-gradient(circle at top, rgba(129, 199, 77, 0.14), rgba(129, 199, 77, 0) 34%), linear-gradient(180deg, rgba(28, 37, 24, 0.96), rgba(43, 30, 21, 0.98))",
+          "--overlay-backdrop": "rgba(10, 13, 9, 0.8)",
+          "--overlay-card-bg": "linear-gradient(180deg, rgba(29, 39, 24, 0.98), rgba(22, 26, 18, 0.98))",
+          "--overlay-base": "radial-gradient(circle at 18% 20%, rgba(181, 226, 130, 0.16) 0 20px, transparent 21px), radial-gradient(circle at 72% 18%, rgba(175, 145, 104, 0.16) 0 18px, transparent 19px), linear-gradient(180deg, rgba(26, 35, 19, 0.16), rgba(21, 23, 18, 0.72)), radial-gradient(circle at 50% 118%, rgba(128, 199, 77, 0.3), rgba(128, 199, 77, 0) 24%), linear-gradient(180deg, rgba(88, 112, 61, 0.18), rgba(54, 39, 26, 0.12))",
+          "--overlay-success": "radial-gradient(circle at 50% 14%, rgba(239, 248, 196, 0.8) 0 10px, transparent 11px), radial-gradient(circle at 66% 24%, rgba(163, 212, 110, 0.18) 0 18px, transparent 19px), linear-gradient(180deg, rgba(29, 39, 24, 0.16), rgba(21, 25, 18, 0.76)), radial-gradient(circle at 50% 118%, rgba(137, 214, 85, 0.34), rgba(137, 214, 85, 0) 22%), linear-gradient(180deg, rgba(170, 196, 121, 0.18), rgba(86, 61, 39, 0.12))",
+          "--overlay-failed": "radial-gradient(circle at 64% 16%, rgba(221, 196, 155, 0.16) 0 18px, transparent 19px), radial-gradient(circle at 18% 26%, rgba(255, 108, 95, 0.12) 0 18px, transparent 19px), linear-gradient(180deg, rgba(33, 25, 17, 0.22), rgba(21, 19, 15, 0.82)), radial-gradient(circle at 50% 118%, rgba(182, 88, 70, 0.28), rgba(182, 88, 70, 0) 22%), linear-gradient(180deg, rgba(119, 95, 67, 0.14), rgba(61, 43, 29, 0.12))",
+          "--text": "#f3f4eb",
+          "--muted": "#a3ad98",
+          "--accent": "#88cf4a",
+          "--accent-strong": "#b6e76f",
+          "--accent-soft": "rgba(136, 207, 74, 0.16)",
+          "--line": "rgba(243, 244, 235, 0.08)",
+          "--line-strong": "rgba(243, 244, 235, 0.12)",
+          "--success": "#b9f58f",
+          "--warning": "#ff8f72",
+          "--warning-color": "#ffb68f",
+          "--warning-glow": "rgba(255, 143, 114, 0.34)",
+          "--warning-fill-start": "#d5ea8b",
+          "--warning-fill-end": "#ff8a63",
+          "--surface-open-text": "rgba(222, 233, 205, 0.7)",
+          "--surface-open-bg": "linear-gradient(180deg, #33452a, #283421)",
+          "--surface-open-line": "rgba(171, 210, 118, 0.12)",
+          "--surface-visited-text": "rgba(246, 244, 230, 0.86)",
+          "--surface-visited-bg": "linear-gradient(180deg, #6a5231, #4f3e25)",
+          "--surface-visited-line": "rgba(203, 166, 109, 0.18)",
+          "--surface-unvisited-glow": "rgba(136, 207, 74, 0.14)",
+          "--surface-wall-bg": "linear-gradient(180deg, #4e5c36, #313921)",
+          "--surface-wall-line": "rgba(222, 234, 195, 0.1)",
+          "--rover-glow": "rgba(136, 207, 74, 0.22)"
+        },
+        characterMarkup: CROC_ROVER,
+        obstacleMarkup: CROC_WALL,
+        copy: {
+          eyebrow: "Swamp Control",
+          title: "CROC SWAMP",
+          subtitle: "늪지 안개를 헤치며 경로를 찾습니다. 테마 전환 후에도 현재 맵과 좌표는 유지됩니다.",
+          themeLabel: "Theme",
+          heightLabel: "Height",
+          widthLabel: "Width",
+          initButton: "늪지 생성",
+          fuelLabel: "체력",
+          missionLabel: "탐사 상태",
+          targetLabel: "탐사 목표",
+          targetCopy: "도달 가능한 최대 늪지 칸 수",
+          progressLabel: "탐사 진행도",
+          commandLabel: "이동 명령",
+          commandPlaceholder: "예: ↑↓↑↓",
+          sendButton: "탐사 실행",
+          hint: "화살표 키로 한 칸씩 바로 움직입니다. 입력창이 활성화된 동안에는 실시간 입력을 막습니다.",
+          surfaceTitle: "Swamp Grid",
+          surfaceCopy: "늪지 경로, 충돌 흔들림, 임무 종료 오버레이가 모두 현재 상태를 유지한 채 테마만 바뀝니다.",
+          surfaceBadge: "Swamp Patrol Live",
+          legendOpen: "미탐사",
+          legendVisited: "탐사 완료",
+          legendWall: "통나무/수풀",
+          legendRover: "악어",
+          overlayExploredLabel: "Explored",
+          overlayFuelLabel: "Stamina",
+          retryButton: "다시 늪지로",
+          missionInProgress: "늪지 탐사 중",
+          missionSuccess: "늪지 탐사 완료",
+          missionFailed: "체력 고갈",
+          overlaySuccessTitle: "SWAMP SECURED",
+          overlayFailedTitle: "MUD RETREAT",
+          overlaySuccessCopy: "늪지 탐험 완료! 이동 가능한 모든 구역을 확인했습니다.",
+          overlayFailedCopy: "지쳐서 늪으로 돌아갔어요. 더 이상 전진할 수 없습니다."
+        }
+      },
+      bunny: {
+        optionLabel: "🐰 토끼",
+        colors: {
+          "--body-background": "radial-gradient(circle at 18% 16%, rgba(255, 229, 239, 0.44) 0, rgba(255, 229, 239, 0) 18%), radial-gradient(circle at 78% 14%, rgba(255, 240, 195, 0.36) 0, rgba(255, 240, 195, 0) 20%), linear-gradient(180deg, #fffaf6 0%, #fff2ea 48%, #ffe6d9 100%)",
+          "--sky-pattern": "radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.88) 0 18px, transparent 19px), radial-gradient(circle at 72% 16%, rgba(255, 255, 255, 0.8) 0 22px, transparent 23px), radial-gradient(circle at 30% 68%, rgba(255, 245, 225, 0.42) 0 12px, transparent 13px), radial-gradient(circle at 88% 58%, rgba(255, 255, 255, 0.74) 0 16px, transparent 17px), linear-gradient(135deg, rgba(255, 215, 227, 0.08) 25%, transparent 25%)",
+          "--sky-opacity": "0.95",
+          "--topbar-start": "rgba(255, 250, 247, 0.94)",
+          "--topbar-end": "rgba(255, 236, 228, 0.94)",
+          "--panel-start": "rgba(255, 251, 247, 0.94)",
+          "--panel-end": "rgba(255, 239, 230, 0.94)",
+          "--card-bg": "rgba(255, 255, 255, 0.6)",
+          "--card-strong-bg": "linear-gradient(135deg, rgba(255, 201, 217, 0.34), rgba(255, 255, 255, 0.62))",
+          "--input-bg": "rgba(255, 255, 255, 0.82)",
+          "--input-border": "rgba(255, 177, 197, 0.24)",
+          "--button-secondary-bg": "rgba(255, 255, 255, 0.72)",
+          "--button-secondary-border": "rgba(255, 177, 197, 0.22)",
+          "--status-bg": "rgba(255, 255, 255, 0.72)",
+          "--status-border": "rgba(255, 177, 197, 0.18)",
+          "--map-stage-background": "radial-gradient(circle at top, rgba(255, 175, 198, 0.18), rgba(255, 175, 198, 0) 35%), linear-gradient(180deg, rgba(255, 250, 242, 0.98), rgba(255, 230, 210, 0.98))",
+          "--overlay-backdrop": "rgba(255, 232, 222, 0.62)",
+          "--overlay-card-bg": "linear-gradient(180deg, rgba(255, 251, 248, 0.98), rgba(255, 236, 228, 0.98))",
+          "--overlay-base": "radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.72) 0 20px, transparent 21px), radial-gradient(circle at 72% 18%, rgba(255, 213, 225, 0.36) 0 18px, transparent 19px), linear-gradient(180deg, rgba(255, 244, 237, 0.24), rgba(255, 230, 214, 0.64)), radial-gradient(circle at 50% 118%, rgba(255, 168, 112, 0.28), rgba(255, 168, 112, 0) 24%), linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 220, 199, 0.12))",
+          "--overlay-success": "radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.88) 0 12px, transparent 13px), radial-gradient(circle at 66% 24%, rgba(255, 210, 222, 0.34) 0 16px, transparent 17px), linear-gradient(180deg, rgba(255, 245, 240, 0.24), rgba(255, 228, 213, 0.64)), radial-gradient(circle at 50% 118%, rgba(255, 172, 96, 0.34), rgba(255, 172, 96, 0) 22%), linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 226, 205, 0.14))",
+          "--overlay-failed": "radial-gradient(circle at 64% 16%, rgba(255, 255, 255, 0.72) 0 18px, transparent 19px), radial-gradient(circle at 18% 26%, rgba(255, 159, 174, 0.2) 0 18px, transparent 19px), linear-gradient(180deg, rgba(255, 240, 237, 0.3), rgba(241, 214, 209, 0.72)), radial-gradient(circle at 50% 118%, rgba(255, 122, 122, 0.22), rgba(255, 122, 122, 0) 22%), linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(234, 197, 189, 0.1))",
+          "--text": "#493238",
+          "--muted": "#8d6f74",
+          "--accent": "#ff9f74",
+          "--accent-strong": "#ff7a57",
+          "--accent-soft": "rgba(255, 159, 116, 0.18)",
+          "--line": "rgba(100, 67, 74, 0.12)",
+          "--line-strong": "rgba(100, 67, 74, 0.18)",
+          "--success": "#5d9562",
+          "--warning": "#d96d7f",
+          "--warning-color": "#cf4f67",
+          "--warning-glow": "rgba(217, 109, 127, 0.24)",
+          "--warning-fill-start": "#ffc0a5",
+          "--warning-fill-end": "#ff8282",
+          "--surface-open-text": "rgba(116, 86, 90, 0.58)",
+          "--surface-open-bg": "linear-gradient(180deg, #fffef9, #fff1e6)",
+          "--surface-open-line": "rgba(255, 193, 169, 0.18)",
+          "--surface-visited-text": "rgba(78, 59, 63, 0.86)",
+          "--surface-visited-bg": "linear-gradient(180deg, #ffe0cf, #ffcdb8)",
+          "--surface-visited-line": "rgba(255, 169, 132, 0.22)",
+          "--surface-unvisited-glow": "rgba(255, 159, 116, 0.12)",
+          "--surface-wall-bg": "linear-gradient(180deg, #f2dfc9, #e9d0af)",
+          "--surface-wall-line": "rgba(183, 143, 96, 0.16)",
+          "--rover-glow": "rgba(255, 159, 116, 0.22)"
+        },
+        characterMarkup: BUNNY_ROVER,
+        obstacleMarkup: BUNNY_WALL,
+        copy: {
+          eyebrow: "Field Control",
+          title: "BUNNY FIELD",
+          subtitle: "들판을 깡총깡총 누비며 길을 찾습니다. 테마를 바꿔도 현재 탐사 진행은 유지됩니다.",
+          themeLabel: "Theme",
+          heightLabel: "Height",
+          widthLabel: "Width",
+          initButton: "들판 생성",
+          fuelLabel: "체력",
+          missionLabel: "탐사 상태",
+          targetLabel: "탐사 목표",
+          targetCopy: "도달 가능한 최대 들판 칸 수",
+          progressLabel: "탐사 진행도",
+          commandLabel: "이동 명령",
+          commandPlaceholder: "예: ↑↓↑↓",
+          sendButton: "깡총 이동",
+          hint: "방향키 입력으로 바로 이동할 수 있습니다. 입력창 사용 중에는 즉시 이동을 막습니다.",
+          surfaceTitle: "Field Grid",
+          surfaceCopy: "방문한 칸, 충돌 흔들림, 종료 오버레이는 유지하면서 화면 분위기만 테마에 맞게 바뀝니다.",
+          surfaceBadge: "Bunny Hop Live",
+          legendOpen: "미탐사",
+          legendVisited: "탐사 완료",
+          legendWall: "울타리/덤불",
+          legendRover: "토끼",
+          overlayExploredLabel: "Explored",
+          overlayFuelLabel: "Stamina",
+          retryButton: "다시 달리기",
+          missionInProgress: "들판 탐사 중",
+          missionSuccess: "당근 밭 탐사 성공",
+          missionFailed: "체력 고갈",
+          overlaySuccessTitle: "FIELD CLEAR",
+          overlayFailedTitle: "HOP REST",
+          overlaySuccessCopy: "당근 밭 탐험 성공! 이동 가능한 모든 구역을 확인했습니다.",
+          overlayFailedCopy: "깡총깡총 힘이 다 빠졌어요. 잠시 쉬어야 합니다."
+        }
+      }
+    };
 
     const KEY_TO_COMMAND = {
       ArrowUp: "↑",
@@ -958,17 +1618,138 @@
     let keyboardQueue = [];
     let lastMapData = null;
     let lastInitializedSize = { width: 5, height: 5 };
+    let currentThemeKey = "space";
+
+    function getCurrentTheme() {
+      return THEMES[currentThemeKey] || THEMES.space;
+    }
+
+    function populateThemeSelector() {
+      themeSelectElement.innerHTML = "";
+
+      Object.entries(THEMES).forEach(([key, theme]) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = theme.optionLabel;
+        themeSelectElement.appendChild(option);
+      });
+    }
+
+    function updateCopy() {
+      const { copy } = getCurrentTheme();
+
+      eyebrowElement.textContent = copy.eyebrow;
+      pageTitleElement.textContent = copy.title;
+      subtitleElement.textContent = copy.subtitle;
+      themePickerLabelElement.textContent = copy.themeLabel;
+      heightLabelElement.textContent = copy.heightLabel;
+      widthLabelElement.textContent = copy.widthLabel;
+      initButton.textContent = copy.initButton;
+      fuelLabelMainElement.textContent = copy.fuelLabel;
+      fuelRailTitleElement.textContent = copy.fuelLabel;
+      missionLabelMainElement.textContent = copy.missionLabel;
+      targetLabelMainElement.textContent = copy.targetLabel;
+      targetCopyElement.textContent = copy.targetCopy;
+      progressLabelMainElement.textContent = copy.progressLabel;
+      commandLabelElement.textContent = copy.commandLabel;
+      commandInput.placeholder = copy.commandPlaceholder;
+      sendButton.textContent = copy.sendButton;
+      hintElement.textContent = copy.hint;
+      surfaceTitleElement.textContent = copy.surfaceTitle;
+      surfaceCopyElement.textContent = copy.surfaceCopy;
+      surfaceBadgeElement.textContent = copy.surfaceBadge;
+      legendOpenElement.textContent = copy.legendOpen;
+      legendVisitedElement.textContent = copy.legendVisited;
+      legendWallElement.textContent = copy.legendWall;
+      legendRoverElement.textContent = copy.legendRover;
+      overlayExploredLabelElement.textContent = copy.overlayExploredLabel;
+      overlayFuelLabelElement.textContent = copy.overlayFuelLabel;
+      retryButton.textContent = copy.retryButton;
+
+      if (!hasRenderedMap) {
+        statusElement.textContent = "맵이 아직 생성되지 않았습니다.";
+      }
+    }
+
+    function applyThemeColors(themeKey) {
+      const root = document.documentElement;
+      const { colors } = THEMES[themeKey];
+
+      Object.entries(colors).forEach(([name, value]) => {
+        root.style.setProperty(name, value);
+      });
+    }
+
+    function decorateCell(cellElement) {
+      if (!cellElement) {
+        return;
+      }
+
+      if (cellElement.classList.contains("cell-rover")) {
+        renderRoverMarkup(cellElement, currentDirection);
+        return;
+      }
+
+      if (cellElement.dataset.baseValue === "1") {
+        cellElement.innerHTML = getCurrentTheme().obstacleMarkup;
+        return;
+      }
+
+      cellElement.innerHTML = "";
+    }
+
+    function refreshGridTheme() {
+      cellElements.forEach((row) => {
+        row.forEach((cellElement) => {
+          decorateCell(cellElement);
+        });
+      });
+
+      if (currentRover) {
+        const currentCell = cellElements[currentRover.row]?.[currentRover.col];
+        if (currentCell) {
+          currentCell.classList.add("cell-rover");
+          renderRoverMarkup(currentCell, currentDirection);
+        }
+      }
+    }
+
+    function applyTheme(themeKey) {
+      currentThemeKey = THEMES[themeKey] ? themeKey : "space";
+      document.documentElement.dataset.theme = currentThemeKey;
+      themeSelectElement.value = currentThemeKey;
+      applyThemeColors(currentThemeKey);
+      updateCopy();
+
+      try {
+        window.localStorage.setItem(THEME_STORAGE_KEY, currentThemeKey);
+      } catch (error) {
+        void error;
+      }
+
+      if (lastMapData) {
+        refreshGridTheme();
+        updateMission(lastMapData.mission, lastMapData.exploredCount, lastMapData.targetCount);
+        updateOverlay(lastMapData);
+      }
+
+      if (lastMapData) {
+        updateFuel(lastMapData.fuel);
+      }
+    }
 
     function getMissionLabel(mission) {
+      const { copy } = getCurrentTheme();
+
       if (mission === "SUCCESS") {
-        return "탐사 성공";
+        return copy.missionSuccess;
       }
 
       if (mission === "FAILED") {
-        return "탐사 실패";
+        return copy.missionFailed;
       }
 
-      return "탐사 진행 중";
+      return copy.missionInProgress;
     }
 
     function isMissionEnded() {
@@ -1023,6 +1804,7 @@
       cellElements.forEach((cellRow, rowIndex) => {
         cellRow.forEach((cellElement, colIndex) => {
           if (cellElement.dataset.baseValue !== "0") {
+            decorateCell(cellElement);
             return;
           }
 
@@ -1033,12 +1815,14 @@
             cellElement.classList.remove("cell-visited");
             cellElement.classList.add("cell-open", "cell-unvisited");
           }
+
+          decorateCell(cellElement);
         });
       });
     }
 
     function renderRoverMarkup(cellElement, direction) {
-      cellElement.innerHTML = ROVER_MARKUP;
+      cellElement.innerHTML = getCurrentTheme().characterMarkup;
       const roverIcon = cellElement.querySelector(".rover-icon");
       if (roverIcon) {
         roverIcon.style.setProperty("--rover-rotation", COMMAND_ROTATION[direction] || "0deg");
@@ -1054,7 +1838,7 @@
         const previousCell = cellElements[currentRover.row]?.[currentRover.col];
         if (previousCell) {
           previousCell.classList.remove("cell-rover", "cell-shake");
-          previousCell.textContent = previousCell.dataset.baseValue;
+          decorateCell(previousCell);
         }
       }
 
@@ -1116,7 +1900,7 @@
           const isVisited = visited[rowIndex][colIndex];
           cellElement.className = `cell ${buildCellClass(cell, isVisited)}`;
           cellElement.dataset.baseValue = String(cell);
-          cellElement.textContent = String(cell);
+          decorateCell(cellElement);
           rowElement.appendChild(cellElement);
           cellRow.push(cellElement);
         });
@@ -1127,24 +1911,24 @@
 
       hasRenderedMap = true;
       fitGridToViewport(grid);
-      setRoverPosition(rover);
+      setRoverPosition(rover, currentDirection);
     }
 
     function updateOverlay(data) {
       const isVisible = data.mission === "SUCCESS" || data.mission === "FAILED";
+      const { copy } = getCurrentTheme();
+
       overlayElement.classList.toggle("is-visible", isVisible);
       overlayElement.setAttribute("aria-hidden", String(!isVisible));
-      overlayElement.querySelector(".overlay-card").classList.toggle("overlay-success", data.mission === "SUCCESS");
-      overlayElement.querySelector(".overlay-card").classList.toggle("overlay-failed", data.mission === "FAILED");
+      overlayCardElement.classList.toggle("overlay-success", data.mission === "SUCCESS");
+      overlayCardElement.classList.toggle("overlay-failed", data.mission === "FAILED");
 
       if (!isVisible) {
         return;
       }
 
-      overlayTitleElement.textContent = data.mission === "SUCCESS" ? "MISSION SUCCESS" : "MISSION FAILED";
-      overlayCopyElement.textContent = data.mission === "SUCCESS"
-        ? "NOMINAL — 도달 가능한 모든 구역 탐사를 완료했습니다."
-        : "ABORT — 연료 한계에 도달해 임무가 종료되었습니다.";
+      overlayTitleElement.textContent = data.mission === "SUCCESS" ? copy.overlaySuccessTitle : copy.overlayFailedTitle;
+      overlayCopyElement.textContent = data.mission === "SUCCESS" ? copy.overlaySuccessCopy : copy.overlayFailedCopy;
       overlayExploredElement.textContent = `${data.exploredCount} / ${data.targetCount}`;
       overlayFuelElement.textContent = String(data.fuel);
     }
@@ -1226,10 +2010,11 @@
         return;
       }
 
-      statusElement.textContent = "Launch sequence started...";
+      statusElement.textContent = `${getCurrentTheme().copy.initButton} 중...`;
       overlayElement.classList.remove("is-visible");
       overlayElement.setAttribute("aria-hidden", "true");
       currentMission = "IN_PROGRESS";
+      currentDirection = "↑";
       keyboardQueue = [];
 
       try {
@@ -1240,7 +2025,7 @@
         commandInput.value = "";
         applyGameState(data, { rebuildGrid: true, source: "init" });
         startStatePolling();
-        statusElement.textContent = `Launch complete: ${height} x ${width} grid, 탐사 목표 ${data.targetCount}칸`;
+        statusElement.textContent = `${height} x ${width} 맵 생성 완료, 목표 ${data.targetCount}칸`;
       } catch (error) {
         statusElement.textContent = error.message || "초기화에 실패했습니다.";
       }
@@ -1277,9 +2062,9 @@
         });
 
         if (source === "manual") {
-          statusElement.textContent = `명령 ${commands.join("")} 결과: ${data.result}, 탐사 ${data.exploredCount}/${data.targetCount}, 연료 ${data.fuel}, 상태 ${getMissionLabel(data.mission)}`;
+          statusElement.textContent = `명령 ${commands.join("")} 결과: ${data.result}, 탐사 ${data.exploredCount}/${data.targetCount}, ${getCurrentTheme().copy.fuelLabel} ${data.fuel}, 상태 ${getMissionLabel(data.mission)}`;
         } else {
-          statusElement.textContent = `실시간 조종: ${commands.join("")}, 결과 ${data.result}, 연료 ${data.fuel}`;
+          statusElement.textContent = `실시간 조종: ${commands.join("")}, 결과 ${data.result}, ${getCurrentTheme().copy.fuelLabel} ${data.fuel}`;
         }
       } catch (error) {
         statusElement.textContent = error.message || "이동 요청에 실패했습니다.";
@@ -1321,7 +2106,7 @@
       }
 
       commandInput.value = "";
-      statusElement.textContent = "Executing command stream...";
+      statusElement.textContent = `${getCurrentTheme().copy.sendButton} 중...`;
       await executeCommands(commands, { source: "manual" });
     }
 
@@ -1335,9 +2120,8 @@
         return;
       }
 
-      // 입력창(명령, 높이/너비 등)에 포커스가 있으면 실시간 조종을 하지 않는다.
       const activeTag = document.activeElement?.tagName;
-      if (activeTag === "INPUT" || activeTag === "TEXTAREA") {
+      if (activeTag === "INPUT" || activeTag === "TEXTAREA" || activeTag === "SELECT") {
         return;
       }
 
@@ -1354,16 +2138,25 @@
     function handleResize() {
       if (lastMapData) {
         fitGridToViewport(lastMapData.grid);
-      }
-
-      if (lastMapData) {
         updateFuel(lastMapData.fuel);
       }
     }
 
+    function loadStoredTheme() {
+      try {
+        return window.localStorage.getItem(THEME_STORAGE_KEY) || "space";
+      } catch (error) {
+        return "space";
+      }
+    }
+
+    populateThemeSelector();
+    applyTheme(loadStoredTheme());
+
     initButton.addEventListener("click", () => initializeMap());
     sendButton.addEventListener("click", sendCommands);
     retryButton.addEventListener("click", () => initializeMap(lastInitializedSize));
+    themeSelectElement.addEventListener("change", (event) => applyTheme(event.target.value));
     directionButtons.forEach((button) => {
       button.addEventListener("click", () => appendCommand(button.dataset.command));
     });
