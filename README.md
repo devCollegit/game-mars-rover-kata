@@ -2,6 +2,10 @@
 
 Mars Rover KATA를 기반으로 만든 간단한 탐사 게임 프로젝트입니다.
 
+## 게임 화면
+
+![Mars Rover 게임 화면](docs/images/game-preview.png)
+
 ## 구성
 
 - Backend: `main.py` 단일 파일, Python + FastAPI
@@ -16,6 +20,7 @@ Mars Rover KATA를 기반으로 만든 간단한 탐사 게임 프로젝트입�
 - 방향 명령 기반 이동
 - 연료, 방문 칸, 목표 수집 상태 표시
 - 프론트 실시간 상태 갱신
+- 우주선, 공룡, 아기상어, 악어, 토끼 테마 선택
 
 ## 실행 방법
 
