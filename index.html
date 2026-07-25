@@ -1009,9 +1009,7 @@
           <div class="objective-row"><span>리플레이 시드</span><strong id="objective-seed">-</strong></div>
         </div>
 
-        <div id="tutorial" class="tutorial">
-          미션 가이드: 샘플을 모두 수집하고 목표 지점에 도달하며 생존 턴을 채우면 스테이지 클리어입니다.
-        </div>
+        <div id="tutorial" class="tutorial"></div>
 
         <div class="command-zone">
           <div class="field">
@@ -1097,6 +1095,7 @@
 
   <script>
     const THEME_STORAGE_KEY = "mars-rover-theme";
+    const TUTORIAL_COPY = "미션 가이드: 샘플을 모두 수집하고 목표 지점에 도달하며 생존 턴을 채우면 스테이지 클리어입니다.";
 
     const mapElement = document.getElementById("map");
     const statusElement = document.getElementById("status");
@@ -1839,7 +1838,7 @@
       commandInput.placeholder = copy.commandPlaceholder;
       sendButton.textContent = copy.sendButton;
       hintElement.textContent = copy.hint;
-      tutorialElement.textContent = "미션 가이드: 샘플을 모두 수집하고 목표 지점에 도달하며 생존 턴을 채우면 스테이지 클리어입니다.";
+      tutorialElement.textContent = TUTORIAL_COPY;
       surfaceTitleElement.textContent = copy.surfaceTitle;
       surfaceCopyElement.textContent = copy.surfaceCopy;
       surfaceBadgeElement.textContent = copy.surfaceBadge;
@@ -2041,7 +2040,12 @@
 
       for (let index = 0; index < queueCommands.length; index += 1) {
         const command = queueCommands[index];
-        const [dr, dc] = directionMap[command];
+        const direction = directionMap[command];
+        if (!direction) {
+          collisionIndex = index;
+          break;
+        }
+        const [dr, dc] = direction;
         const nextRow = row + dr;
         const nextCol = col + dc;
         const outOfBounds =
@@ -2446,7 +2450,7 @@
       if (!lastInitializedSize) {
         return;
       }
-      const nextStage = Math.max(1, Number(stageInput.value) + 1);
+      const nextStage = Math.min(99, Math.max(1, Number(stageInput.value) + 1));
       await initializeMap({
         width: lastInitializedSize.width,
         height: lastInitializedSize.height,

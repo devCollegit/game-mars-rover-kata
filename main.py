@@ -1,5 +1,6 @@
 import random
 from pathlib import Path
+from uuid import UUID
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Request
@@ -97,6 +98,7 @@ THEME_EFFECTS = {
     },
 }
 
+# stage -> reward metadata (theme unlock, skin name, player title)
 STAGE_REWARDS = {
     1: {"theme": "dino", "skin": "Volcano Scout", "title": "탐험 시작자"},
     2: {"theme": "shark", "skin": "Bubble Rider", "title": "지형 분석가"},
@@ -116,6 +118,14 @@ def normalize_difficulty(difficulty: str) -> str:
 def normalize_theme(theme: str) -> str:
     normalized = theme.strip().lower()
     return normalized if normalized in THEME_EFFECTS else "space"
+
+
+def is_valid_session_id(value: str) -> bool:
+    try:
+        UUID(value)
+    except ValueError:
+        return False
+    return True
 
 
 def build_grid(height: int, width: int, obstacle_ratio: float, rng: random.Random) -> list[list[int]]:
@@ -261,7 +271,11 @@ def _step_rover(
     }
 
     if command not in direction_map:
-        raise HTTPException(status_code=400, detail=f"invalid command: {command}")
+        valid_commands = ", ".join(direction_map.keys())
+        raise HTTPException(
+            status_code=400,
+            detail=f"invalid command: {command}. valid commands: {valid_commands}",
+        )
 
     delta_row, delta_col = direction_map[command]
     next_row = rover["row"] + delta_row
@@ -521,7 +535,7 @@ def build_game_state_response(state: GameState, status: str) -> dict[str, object
     }
 
 
-def _new_game_state(payload: InitRequest, session_id: str) -> GameState:
+def _new_game_state(payload: InitRequest, source_session_id: str | None = None) -> GameState:
     difficulty = normalize_difficulty(payload.difficulty)
     settings = DIFFICULTY_SETTINGS[difficulty]
 
@@ -573,12 +587,7 @@ def _new_game_state(payload: InitRequest, session_id: str) -> GameState:
         protected | supplies | hazards,
     )
 
-    previous_state = session_games.get(session_id)
-    previous_unlocks = (
-        set(previous_state["unlocked_rewards"])
-        if isinstance(previous_state, dict) and isinstance(previous_state.get("unlocked_rewards"), set)
-        else set()
-    )
+    previous_unlocks = _get_previous_unlocks(source_session_id) if source_session_id else set()
 
     return {
         "grid": grid,
@@ -617,9 +626,19 @@ def _get_session_id(request: Request) -> str | None:
     return session_id
 
 
+def _get_previous_unlocks(session_id: str) -> set[str]:
+    previous_state = session_games.get(session_id)
+    if not isinstance(previous_state, dict):
+        return set()
+    unlocked_rewards = previous_state.get("unlocked_rewards")
+    if not isinstance(unlocked_rewards, set):
+        return set()
+    return set(unlocked_rewards)
+
+
 def _get_session_state(request: Request) -> tuple[str, GameState]:
     session_id = _get_session_id(request)
-    if session_id is None or session_id not in session_games:
+    if session_id is None or not is_valid_session_id(session_id) or session_id not in session_games:
         raise HTTPException(status_code=400, detail="game is not initialized")
     return session_id, session_games[session_id]
 
@@ -659,9 +678,16 @@ def initialize_game(payload: InitRequest, request: Request) -> JSONResponse:
         raise HTTPException(status_code=400, detail="width and height must be at least 3")
 
     incoming_session_id = _get_session_id(request)
-    session_id = incoming_session_id if incoming_session_id else str(uuid4())
+    source_session_id: str | None = None
+    if (
+        incoming_session_id
+        and is_valid_session_id(incoming_session_id)
+        and incoming_session_id in session_games
+    ):
+        source_session_id = incoming_session_id
+    session_id = str(uuid4())
 
-    state = _new_game_state(payload, session_id)
+    state = _new_game_state(payload, source_session_id)
     session_games[session_id] = state
     response_payload = build_game_state_response(state, "READY")
 
@@ -683,8 +709,9 @@ def move_rover_by_command(payload: CommandRequest, request: Request) -> dict[str
     if any(command.strip() == "" for command in payload.commands):
         raise HTTPException(status_code=400, detail="commands must not be empty")
 
-    if evaluate_mission_status(state) != "IN_PROGRESS":
-        raise HTTPException(status_code=400, detail="mission has already ended")
+    mission = evaluate_mission_status(state)
+    if mission != "IN_PROGRESS":
+        raise HTTPException(status_code=400, detail=f"mission has already ended: {mission}")
 
     normalized_commands = normalize_commands(payload.commands)
     state["theme"] = normalize_theme(payload.theme)
