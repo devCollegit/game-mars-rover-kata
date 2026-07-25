@@ -231,6 +231,12 @@
       gap: 12px;
     }
 
+    .setup-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
     .field-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -419,6 +425,47 @@
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
+    .tutorial,
+    .queue-preview,
+    .objective-panel {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .tutorial {
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .queue-preview {
+      color: color-mix(in srgb, var(--text) 88%, white);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .objective-panel {
+      display: grid;
+      gap: 6px;
+      color: color-mix(in srgb, var(--text) 88%, white);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    .objective-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .objective-row strong {
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: 0.01em;
+    }
+
     .status {
       padding: 12px 14px;
       border-radius: 16px;
@@ -599,6 +646,19 @@
       animation: collision-shake 360ms ease;
     }
 
+    .point-marker {
+      font-size: calc(var(--cell-size) * 0.36);
+      line-height: 1;
+      z-index: 1;
+      pointer-events: none;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .point-marker.is-collected {
+      opacity: 0.35;
+      filter: grayscale(0.8);
+    }
+
     .rover-icon,
     .wall-icon {
       width: calc(var(--cell-size) * 0.82);
@@ -772,6 +832,19 @@
       font-weight: 700;
     }
 
+    .overlay-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .overlay-reward {
+      margin: 10px 0 16px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
     @keyframes warning-pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.52; }
@@ -847,9 +920,16 @@
       }
 
       .field-grid,
+      .setup-grid,
       .metrics,
+      .overlay-actions,
       .overlay-stats {
         grid-template-columns: 1fr;
+      }
+
+      .direction-button {
+        min-height: 58px;
+        font-size: 1.06rem;
       }
     }
   </style>
@@ -872,14 +952,30 @@
 
     <section class="layout">
       <section class="panel controls">
-        <div class="field-grid">
-          <div class="field">
-            <label id="height-label" class="label" for="height">Height</label>
-            <input id="height" type="number" min="3" max="20" value="5">
+        <div class="setup-grid">
+          <div class="field-grid">
+            <div class="field">
+              <label id="height-label" class="label" for="height">Height</label>
+              <input id="height" type="number" min="3" max="20" value="5">
+            </div>
+            <div class="field">
+              <label id="width-label" class="label" for="width">Width</label>
+              <input id="width" type="number" min="3" max="20" value="5">
+            </div>
           </div>
-          <div class="field">
-            <label id="width-label" class="label" for="width">Width</label>
-            <input id="width" type="number" min="3" max="20" value="5">
+          <div class="field-grid">
+            <div class="field">
+              <label id="difficulty-label" class="label" for="difficulty">Difficulty</label>
+              <select id="difficulty" class="theme-select">
+                <option value="easy">Easy</option>
+                <option value="normal" selected>Normal</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+            <div class="field">
+              <label id="stage-label" class="label" for="stage">Stage</label>
+              <input id="stage" type="number" min="1" max="99" value="1">
+            </div>
           </div>
         </div>
 
@@ -905,6 +1001,16 @@
           </div>
         </div>
 
+        <div id="objective-panel" class="objective-panel" aria-live="polite">
+          <div class="objective-row"><span>샘플 수집</span><strong id="objective-samples">0 / 0</strong></div>
+          <div class="objective-row"><span>목표 지점</span><strong id="objective-goal">미도달</strong></div>
+          <div class="objective-row"><span>생존 턴</span><strong id="objective-survival">0 / 0</strong></div>
+          <div class="objective-row"><span>스테이지</span><strong id="objective-stage">1 · NORMAL</strong></div>
+          <div class="objective-row"><span>리플레이 시드</span><strong id="objective-seed">-</strong></div>
+        </div>
+
+        <div id="tutorial" class="tutorial"></div>
+
         <div class="command-zone">
           <div class="field">
             <label id="command-label" class="label" for="command-input">Command Stream</label>
@@ -922,6 +1028,7 @@
 
           <button id="send-button" class="secondary-button" type="button">EXECUTE</button>
           <div id="hint" class="hint">Keyboard arrows available. 입력창에 포커스가 없을 때는 화살표 키로 즉시 1칸 이동합니다.</div>
+          <div id="queue-preview" class="queue-preview">명령 큐: -</div>
         </div>
 
         <div id="status" class="status">맵이 아직 생성되지 않았습니다.</div>
@@ -956,7 +1063,7 @@
             </div>
             <div class="fuel-scale">
               <span>0</span>
-              <span>100</span>
+              <span id="fuel-scale-max">100</span>
             </div>
           </aside>
         </div>
@@ -975,7 +1082,11 @@
                 <div id="overlay-fuel" class="overlay-stat-value">0</div>
               </div>
             </div>
-            <button id="retry-button" class="primary-button" type="button">다시 도전</button>
+            <p id="overlay-reward" class="overlay-reward"></p>
+            <div class="overlay-actions">
+              <button id="retry-button" class="primary-button" type="button">다시 도전</button>
+              <button id="next-stage-button" class="secondary-button" type="button">다음 스테이지</button>
+            </div>
           </div>
         </div>
       </section>
@@ -984,14 +1095,18 @@
 
   <script>
     const THEME_STORAGE_KEY = "mars-rover-theme";
+    const TUTORIAL_COPY = "미션 가이드: 샘플을 모두 수집하고 목표 지점에 도달하며 생존 턴을 채우면 스테이지 클리어입니다.";
 
     const mapElement = document.getElementById("map");
     const statusElement = document.getElementById("status");
     const initButton = document.getElementById("init-button");
     const sendButton = document.getElementById("send-button");
     const retryButton = document.getElementById("retry-button");
+    const nextStageButton = document.getElementById("next-stage-button");
     const widthInput = document.getElementById("width");
     const heightInput = document.getElementById("height");
+    const difficultyInput = document.getElementById("difficulty");
+    const stageInput = document.getElementById("stage");
     const commandInput = document.getElementById("command-input");
     const fuelValueElement = document.getElementById("fuel-value");
     const fuelCardElement = document.getElementById("fuel-card");
@@ -999,6 +1114,7 @@
     const fuelRailTitleElement = document.getElementById("fuel-rail-title");
     const fuelSideValueElement = document.getElementById("fuel-side-value");
     const fuelGaugeFillElement = document.getElementById("fuel-gauge-fill");
+    const fuelScaleMaxElement = document.getElementById("fuel-scale-max");
     const missionValueElement = document.getElementById("mission-value");
     const targetValueElement = document.getElementById("target-value");
     const progressValueElement = document.getElementById("progress-value");
@@ -1025,6 +1141,14 @@
     const progressLabelMainElement = document.getElementById("progress-label-main");
     const commandLabelElement = document.getElementById("command-label");
     const hintElement = document.getElementById("hint");
+    const queuePreviewElement = document.getElementById("queue-preview");
+    const tutorialElement = document.getElementById("tutorial");
+    const objectiveSamplesElement = document.getElementById("objective-samples");
+    const objectiveGoalElement = document.getElementById("objective-goal");
+    const objectiveSurvivalElement = document.getElementById("objective-survival");
+    const objectiveStageElement = document.getElementById("objective-stage");
+    const objectiveSeedElement = document.getElementById("objective-seed");
+    const overlayRewardElement = document.getElementById("overlay-reward");
     const surfaceTitleElement = document.getElementById("surface-title");
     const surfaceCopyElement = document.getElementById("surface-copy");
     const surfaceBadgeElement = document.getElementById("surface-badge");
@@ -1608,6 +1732,17 @@
       "→": "90deg"
     };
 
+    const INPUT_TO_COMMAND = {
+      "U": "↑",
+      "D": "↓",
+      "L": "←",
+      "R": "→",
+      "↑": "↑",
+      "↓": "↓",
+      "←": "←",
+      "→": "→"
+    };
+
     let pollingTimerId = null;
     let cellElements = [];
     let currentRover = null;
@@ -1617,11 +1752,59 @@
     let commandInFlight = false;
     let keyboardQueue = [];
     let lastMapData = null;
-    let lastInitializedSize = { width: 5, height: 5 };
+    let lastInitializedSize = { width: 5, height: 5, difficulty: "normal", stage: 1, seed: null };
     let currentThemeKey = "space";
+    let currentFuelLimit = 100;
 
     function getCurrentTheme() {
       return THEMES[currentThemeKey] || THEMES.space;
+    }
+
+    function getPointMarker(row, col) {
+      if (!lastMapData?.points) {
+        return null;
+      }
+
+      const goal = lastMapData.points.goal;
+      if (goal && goal.row === row && goal.col === col) {
+        return { icon: "🎯", type: "goal", collected: false };
+      }
+
+      const sample = (lastMapData.points.samples || []).find((item) => item.row === row && item.col === col);
+      if (sample) {
+        return { icon: "🧪", type: "sample", collected: Boolean(sample.collected) };
+      }
+
+      const isSupply = (lastMapData.points.supplies || []).some((item) => item.row === row && item.col === col);
+      if (isSupply) {
+        return { icon: "⛽", type: "supply", collected: false };
+      }
+
+      const isHazard = (lastMapData.points.hazards || []).some((item) => item.row === row && item.col === col);
+      if (isHazard) {
+        return { icon: "⚠️", type: "hazard", collected: false };
+      }
+
+      const isBoost = (lastMapData.points.boosts || []).some((item) => item.row === row && item.col === col);
+      if (isBoost) {
+        return { icon: "⚡", type: "boost", collected: false };
+      }
+
+      return null;
+    }
+
+    function renderPointMarker(cellElement, marker) {
+      if (!marker) {
+        return;
+      }
+      const markerElement = document.createElement("span");
+      markerElement.className = `point-marker point-${marker.type}`;
+      if (marker.collected) {
+        markerElement.classList.add("is-collected");
+      }
+      markerElement.textContent = marker.icon;
+      markerElement.setAttribute("aria-hidden", "true");
+      cellElement.appendChild(markerElement);
     }
 
     function populateThemeSelector() {
@@ -1655,6 +1838,7 @@
       commandInput.placeholder = copy.commandPlaceholder;
       sendButton.textContent = copy.sendButton;
       hintElement.textContent = copy.hint;
+      tutorialElement.textContent = TUTORIAL_COPY;
       surfaceTitleElement.textContent = copy.surfaceTitle;
       surfaceCopyElement.textContent = copy.surfaceCopy;
       surfaceBadgeElement.textContent = copy.surfaceBadge;
@@ -1685,6 +1869,8 @@
         return;
       }
 
+      cellElement.innerHTML = "";
+
       if (cellElement.classList.contains("cell-rover")) {
         renderRoverMarkup(cellElement, currentDirection);
         return;
@@ -1695,7 +1881,11 @@
         return;
       }
 
-      cellElement.innerHTML = "";
+      const rowIndex = Number(cellElement.dataset.rowIndex);
+      const colIndex = Number(cellElement.dataset.colIndex);
+      if (!Number.isNaN(rowIndex) && !Number.isNaN(colIndex)) {
+        renderPointMarker(cellElement, getPointMarker(rowIndex, colIndex));
+      }
     }
 
     function refreshGridTheme() {
@@ -1756,18 +1946,21 @@
       return currentMission === "SUCCESS" || currentMission === "FAILED";
     }
 
-    function updateFuel(value) {
-      const normalizedValue = Math.max(0, Math.min(100, Number(value) || 0));
+    function updateFuel(value, fuelLimit = 100) {
+      currentFuelLimit = Math.max(1, Number(fuelLimit) || 100);
+      const normalizedValue = Math.max(0, Math.min(currentFuelLimit, Number(value) || 0));
+      const ratio = Math.max(0, Math.min(100, (normalizedValue / currentFuelLimit) * 100));
       fuelValueElement.textContent = String(normalizedValue);
       fuelSideValueElement.textContent = String(normalizedValue);
+      fuelScaleMaxElement.textContent = String(currentFuelLimit);
 
       if (window.innerWidth <= 1279) {
-        fuelGaugeFillElement.style.width = `${normalizedValue}%`;
+        fuelGaugeFillElement.style.width = `${ratio}%`;
       } else {
-        fuelGaugeFillElement.style.height = `${normalizedValue}%`;
+        fuelGaugeFillElement.style.height = `${ratio}%`;
       }
 
-      const isWarning = normalizedValue >= 70;
+      const isWarning = normalizedValue >= currentFuelLimit * 0.7;
       fuelCardElement.classList.toggle("fuel-warning", isWarning);
       fuelRailElement.classList.toggle("fuel-warning", isWarning);
     }
@@ -1790,6 +1983,90 @@
       }
 
       progressValueElement.textContent = `${exploredCount} / ${targetCount}`;
+    }
+
+    function updateObjectives(data) {
+      const objectives = data.objectives || {};
+      const sample = objectives.samples || {};
+      const goal = objectives.goal || {};
+      const survival = objectives.survival || {};
+
+      objectiveSamplesElement.textContent = `${sample.collected ?? 0} / ${sample.total ?? 0}`;
+      objectiveGoalElement.textContent = goal.reached ? "도달" : "미도달";
+      objectiveSurvivalElement.textContent = `${survival.moves ?? 0} / ${survival.required ?? 0}`;
+      objectiveStageElement.textContent = `${data.stage ?? 1} · ${(data.difficulty || "normal").toUpperCase()}`;
+      objectiveSeedElement.textContent = String(data.seed ?? "-");
+
+      const reward = data.reward;
+      if (reward?.reward) {
+        const { title, skin, theme } = reward.reward;
+        overlayRewardElement.textContent = reward.new
+          ? `새 보상 해금: ${title} / ${skin} / ${theme}`
+          : `보상: ${title} / ${skin} / ${theme}`;
+      } else {
+        overlayRewardElement.textContent = "";
+      }
+    }
+
+    function normalizeInputCommands(value) {
+      const commands = [];
+      for (const token of Array.from((value || "").trim())) {
+        const normalized = INPUT_TO_COMMAND[token.toUpperCase()] || INPUT_TO_COMMAND[token];
+        if (!normalized) {
+          continue;
+        }
+        commands.push(normalized);
+      }
+      return commands;
+    }
+
+    function updateQueuePreview() {
+      const queueCommands = normalizeInputCommands(commandInput.value);
+      if (!queueCommands.length || !lastMapData?.grid || !lastMapData?.rover) {
+        queuePreviewElement.textContent = "명령 큐: -";
+        return;
+      }
+
+      const directionMap = {
+        "↑": [-1, 0],
+        "↓": [1, 0],
+        "←": [0, -1],
+        "→": [0, 1]
+      };
+
+      let row = lastMapData.rover.row;
+      let col = lastMapData.rover.col;
+      let collisionIndex = -1;
+
+      for (let index = 0; index < queueCommands.length; index += 1) {
+        const command = queueCommands[index];
+        const direction = directionMap[command];
+        if (!direction) {
+          collisionIndex = index;
+          break;
+        }
+        const [dr, dc] = direction;
+        const nextRow = row + dr;
+        const nextCol = col + dc;
+        const outOfBounds =
+          nextRow < 0 ||
+          nextCol < 0 ||
+          nextRow >= lastMapData.grid.length ||
+          nextCol >= lastMapData.grid[0].length;
+        if (outOfBounds || lastMapData.grid[nextRow][nextCol] === 1) {
+          collisionIndex = index;
+          break;
+        }
+        row = nextRow;
+        col = nextCol;
+      }
+
+      if (collisionIndex >= 0) {
+        queuePreviewElement.textContent = `명령 큐: ${queueCommands.join("")} · ${collisionIndex + 1}번째에서 충돌 예상`;
+        return;
+      }
+
+      queuePreviewElement.textContent = `명령 큐: ${queueCommands.join("")} · 예상 도착 (${row}, ${col})`;
     }
 
     function buildCellClass(cell, isVisited) {
@@ -1900,6 +2177,8 @@
           const isVisited = visited[rowIndex][colIndex];
           cellElement.className = `cell ${buildCellClass(cell, isVisited)}`;
           cellElement.dataset.baseValue = String(cell);
+          cellElement.dataset.rowIndex = String(rowIndex);
+          cellElement.dataset.colIndex = String(colIndex);
           decorateCell(cellElement);
           rowElement.appendChild(cellElement);
           cellRow.push(cellElement);
@@ -1922,6 +2201,7 @@
       overlayElement.setAttribute("aria-hidden", String(!isVisible));
       overlayCardElement.classList.toggle("overlay-success", data.mission === "SUCCESS");
       overlayCardElement.classList.toggle("overlay-failed", data.mission === "FAILED");
+      nextStageButton.disabled = data.mission !== "SUCCESS";
 
       if (!isVisible) {
         return;
@@ -1937,9 +2217,18 @@
       const { rebuildGrid = false, direction = currentDirection, result = null, source = "poll" } = options;
 
       lastMapData = data;
-      updateFuel(data.fuel);
+      updateFuel(data.fuel, data.fuelLimit);
       updateTarget(data.targetCount);
       updateMission(data.mission, data.exploredCount, data.targetCount);
+      updateObjectives(data);
+      updateQueuePreview();
+
+      if (data.difficulty) {
+        difficultyInput.value = data.difficulty;
+      }
+      if (data.stage) {
+        stageInput.value = String(data.stage);
+      }
 
       if (rebuildGrid || !cellElements.length) {
         renderGrid(data.grid, data.rover, data.visited);
@@ -1985,13 +2274,14 @@
       pollingTimerId = window.setInterval(syncCurrentState, 500);
     }
 
-    async function requestInitialize(width, height) {
+    async function requestInitialize(width, height, options = {}) {
+      const { difficulty = "normal", stage = 1, seed = null } = options;
       const response = await fetch("/api/init", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ width, height })
+        body: JSON.stringify({ width, height, difficulty, stage, seed, theme: currentThemeKey })
       });
 
       if (!response.ok) {
@@ -2004,9 +2294,19 @@
     async function initializeMap(customSize = null) {
       const width = customSize?.width ?? Number(widthInput.value);
       const height = customSize?.height ?? Number(heightInput.value);
+      const difficulty = customSize?.difficulty ?? difficultyInput.value;
+      const stage = customSize?.stage ?? Number(stageInput.value);
+      const seed = customSize?.seed ?? null;
 
-      if (!Number.isInteger(width) || !Number.isInteger(height) || width < 3 || height < 3) {
-        statusElement.textContent = "높이와 너비는 3 이상의 정수여야 합니다.";
+      if (
+        !Number.isInteger(width) ||
+        !Number.isInteger(height) ||
+        !Number.isInteger(stage) ||
+        width < 3 ||
+        height < 3 ||
+        stage < 1
+      ) {
+        statusElement.textContent = "높이/너비는 3 이상, 스테이지는 1 이상의 정수여야 합니다.";
         return;
       }
 
@@ -2018,14 +2318,16 @@
       keyboardQueue = [];
 
       try {
-        const data = await requestInitialize(width, height);
-        lastInitializedSize = { width, height };
+        const data = await requestInitialize(width, height, { difficulty, stage, seed });
+        lastInitializedSize = { width, height, difficulty, stage, seed: data.seed ?? seed };
         widthInput.value = String(width);
         heightInput.value = String(height);
+        stageInput.value = String(stage);
+        difficultyInput.value = difficulty;
         commandInput.value = "";
         applyGameState(data, { rebuildGrid: true, source: "init" });
         startStatePolling();
-        statusElement.textContent = `${height} x ${width} 맵 생성 완료, 목표 ${data.targetCount}칸`;
+        statusElement.textContent = `${height} x ${width} 맵 생성 완료 · Stage ${stage} · ${difficulty.toUpperCase()} · 목표 ${data.targetCount}칸`;
       } catch (error) {
         statusElement.textContent = error.message || "초기화에 실패했습니다.";
       }
@@ -2045,7 +2347,7 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ commands })
+          body: JSON.stringify({ commands, theme: currentThemeKey })
         });
 
         const data = await response.json();
@@ -2088,7 +2390,7 @@
     }
 
     async function sendCommands() {
-      const commands = Array.from(commandInput.value.trim()).filter(Boolean);
+      const commands = normalizeInputCommands(commandInput.value);
 
       if (commands.length === 0) {
         statusElement.textContent = "이동 명령을 하나 이상 입력하세요.";
@@ -2106,12 +2408,14 @@
       }
 
       commandInput.value = "";
+      updateQueuePreview();
       statusElement.textContent = `${getCurrentTheme().copy.sendButton} 중...`;
       await executeCommands(commands, { source: "manual" });
     }
 
     function appendCommand(command) {
       commandInput.value += command;
+      updateQueuePreview();
     }
 
     function handleKeyboardControl(event) {
@@ -2138,8 +2442,22 @@
     function handleResize() {
       if (lastMapData) {
         fitGridToViewport(lastMapData.grid);
-        updateFuel(lastMapData.fuel);
+        updateFuel(lastMapData.fuel, lastMapData.fuelLimit);
       }
+    }
+
+    async function goToNextStage() {
+      if (!lastInitializedSize) {
+        return;
+      }
+      const nextStage = Math.min(99, Math.max(1, Number(stageInput.value) + 1));
+      await initializeMap({
+        width: lastInitializedSize.width,
+        height: lastInitializedSize.height,
+        difficulty: difficultyInput.value,
+        stage: nextStage,
+        seed: null
+      });
     }
 
     function loadStoredTheme() {
@@ -2152,11 +2470,24 @@
 
     populateThemeSelector();
     applyTheme(loadStoredTheme());
+    updateQueuePreview();
 
     initButton.addEventListener("click", () => initializeMap());
     sendButton.addEventListener("click", sendCommands);
     retryButton.addEventListener("click", () => initializeMap(lastInitializedSize));
+    nextStageButton.addEventListener("click", goToNextStage);
     themeSelectElement.addEventListener("change", (event) => applyTheme(event.target.value));
+    commandInput.addEventListener("input", updateQueuePreview);
+    difficultyInput.addEventListener("change", () => {
+      if (lastInitializedSize) {
+        lastInitializedSize.difficulty = difficultyInput.value;
+      }
+    });
+    stageInput.addEventListener("change", () => {
+      if (lastInitializedSize) {
+        lastInitializedSize.stage = Math.max(1, Number(stageInput.value) || 1);
+      }
+    });
     directionButtons.forEach((button) => {
       button.addEventListener("click", () => appendCommand(button.dataset.command));
     });
